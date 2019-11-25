@@ -3,5 +3,7 @@
 export(add_cp_cols)
 export(export_personnel)
 export(init_datapkg)
+export(rename_attributes)
 export(update_cp_stations)
 import(RPostgres)
+importFrom(data.table,fread)
