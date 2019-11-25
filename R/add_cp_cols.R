@@ -8,7 +8,7 @@
 add_cp_cols <- function(df, station_code_col) {
   # TODO: check existing data for columns first before merging
 
-  df <- merge(df, bleutils::station_info, by.x = station_code_col, by.y = "StationId")
+  df <- merge(df, bleutils::station_info, by.x = station_code_col, by.y = "station_id")
   return(df)
 }
 
@@ -21,7 +21,7 @@ add_cp_cols <- function(df, station_code_col) {
 update_cp_stations <- function(source_file = "C:/Users/atn893/Documents/Box Sync/Beaufort LTER/Core Program/BLE_LTER_CP_Stations.xlsx",
                                sheet = "lookup") {
   canon <- readxl::read_excel(source_file, sheet = sheet)
-  if (exists("station_info", where = "package:bleutils") && all(bleutils::station_info == canon)) message("Package version of station info is up-to-date. No action taken.")
+  if (exists("station_info", where = "package:bleutils") && all(bleutils::station_info == canon) && all(colnames(station_info) == colnames(canon))) message("Package version of station info is up-to-date. No action taken.")
   else {
     message("Nope. Something's changed. Updating package version of station info.")
     station_info <- canon
