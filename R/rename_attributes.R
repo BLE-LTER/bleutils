@@ -5,8 +5,9 @@
 #' @param meta_list (character) A list of dataframes containing metadata returned by \code{\link{get_meta}}.
 #' @param dataset_id (numeric) A dataset ID.
 #' @param entity (numeric) An entity number.
-#' @param file_dir (character) Path to directory containing flat files (data files). Defaults to current R working directory if "".
+#' @param file_dir (character) Path to directory containing flat files (data files). Defaults to current R working directory.
 #' @param filename (character) Filename. Defaults to "", in which case the entity metadata will be read to find filename.
+#' @param x R object. If specified, will skip looking for entity file altogether.
 #' @return The data table entity with renamed columns.
 #' @importFrom data.table fread
 #' @export
@@ -16,8 +17,9 @@ rename_attributes <-
   function(meta_list,
            dataset_id,
            entity,
-           file_dir = "",
-           filename = "") {
+           file_dir = getwd(),
+           filename = "",
+           x) {
     # subset to specified dataset_id and entity number
     entity_e <-
       subset(meta_list[["entities"]], datasetid == dataset_id &
@@ -31,11 +33,11 @@ rename_attributes <-
     attributes <-
       subset(meta_list[["attributes"]], datasetid == dataset_id &
                entity_position == entity)
-
+    if (is.null(x)) {
     if (filename != "") {
-    entity_df <- data.table::fread(filename)
+    entity_df <- data.table::fread(file.path(file_dir, filename))
   } else entity_df <- data.table::fread(file.path(file_dir, entity_e[["filename"]]))
-
+    } else entity_df <- x
     colnames(entity_df) <- attributes[["attributeName"]]
     return(entity_df)
   }
