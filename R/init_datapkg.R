@@ -13,10 +13,16 @@ init_datapkg <- function(dataset_id,
   dsdir <-
     file.path(base_path,
               paste0("dataset", "", dataset_id, "_", dataset_nickname))
-  if(!dir.exists(dsdir)) dir.create(dsdir)
-  if(!dir.exists(file.path(dsdir, "FromPI"))) dir.create(file.path(dsdir, "FromPI"))
-   workdir <- file.path(dsdir, "Cleaned_EML_generation")
-  if(!dir.exists(workdir)) dir.create(workdir)
+  if (!dir.exists(dsdir))
+    dir.create(dsdir)
+  if (!dir.exists(file.path(dsdir, "FromPI")))
+    dir.create(file.path(dsdir, "FromPI"))
+  workdir <- file.path(dsdir, "Clean")
+  if (!dir.exists(workdir)) {
+    dir.create(workdir)
+    dir.create(file.path(workdir, "EML_generation"))
+    dir.create(file.path(workdir, "EML_generation", "data"))
+  }
   message(paste("Created directory structure under", dsdir))
 
   init_script(dataset_id = dataset_id, workdir = workdir)
@@ -27,9 +33,15 @@ init_datapkg <- function(dataset_id,
 #'
 
 init_script <- function(dataset_id, workdir) {
-  template <- readLines(system.file("template.R", package = "bleutils"))
+  template <-
+    readLines(system.file("template.R", package = "bleutils"))
   template <- gsub("datasetid", dataset_id, template)
   script_name <- paste0("dataset", dataset_id, ".R")
-  writeLines(template, file.path(workdir, script_name))
-  message(paste("Created from template processing script", script_name, "under", file.path(workdir)))
+  writeLines(template, file.path(workdir, "EML_generation", script_name))
+  message(paste(
+    "Created from template processing script",
+    script_name,
+    "under",
+    file.path(workdir, "EML_generation")
+  ))
 }
