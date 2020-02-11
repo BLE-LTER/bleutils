@@ -55,7 +55,7 @@ export_personnel <-
     query_df[["datasetid"]] <- paste0("knb-lter-ble.", query_df[["datasetid"]])
 
     if (write_to_file) {
-      write.csv(query_df, file = file.path(file_dir, paste0("BLE_CP_", paste0(dataset_ids, collapse = "_"), "_personnel.csv")), row.names = FALSE)
+      write.csv(query_df, file = file.path(file_dir, paste0("BLE_LTER_", paste0(dataset_ids, collapse = "_"), "_personnel.csv")), row.names = FALSE)
     }
     message("You might want to erase command history, since user password to your database was given.")
     return(query_df)
