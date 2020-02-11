@@ -18,13 +18,23 @@ library(bleutils)
 # Process data here
 
 
+# -------------- #
 # EML generation
-# execute this block and you'll get an EML file! at least that's the hope
+# execute this block line by line and you'll get an EML file!
 
+# get metadata from metabase
+# type in username and password in the R console
+metadata <- get_meta(dbname = "ble_metabase",
+                     dataset_ids = datasetid,
+                     host = 'localhost') # Tim: replace with An's IP address
 
-metadata <- get_meta("ble_metabase", dataset_ids = datasetid)
-entities_datasetid <- create_entity_all(metadata, here::here(), datasetid)
+# create entities in emld list structure
+entities_datasetid <- create_entity_all(metadata,
+                                        file_dir = here::here(),
+                                        dataset_id = datasetid)
 
+# create EML in emld list structure
+# write to file only if resulting EML is schema valid
 tryCatch({
   eml_datasetid <- create_EML(metadata, entities_datasetid, datasetid, here::here())
   if(eml_validate(eml_datasetid)) # if above validation returns TRUE, then serialize to XML file
