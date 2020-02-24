@@ -12,7 +12,7 @@ init_datapkg <- function(dataset_id,
                          base_path = "K:/Data") {
   dsdir <-
     file.path(base_path,
-              paste0("dataset", "", dataset_id, "_", dataset_nickname))
+              paste0(dataset_id, "_", dataset_nickname))
   if (!dir.exists(dsdir))
     dir.create(dsdir)
   if (!dir.exists(file.path(dsdir, "FromPI")))
