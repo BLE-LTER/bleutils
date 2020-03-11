@@ -10,13 +10,16 @@
 init_datapkg <- function(dataset_id,
                          dataset_nickname,
                          base_path = "K:/Data") {
-  stopifnot(dataset_id %% 1 == 0, "Dataset IDs should be integers")
+  stopifnot(dataset_id %% 1 == 0)
 
   ## check for exisiting IDs
   dirs <- list.files(base_path)
-  ids <- sapply(dirs, substr, 1, 1)
+  ids <- suppressMessages(as.integer(sapply(dirs, substr, 1, 1)))
 
-  stopifnot(!(dataset_id %in% as.integer(ids)), "Dataset ID already existing")
+  if (dataset_id %in% ids) {
+    next_id <- max(ids, na.rm = T) + 1
+    stop(paste("Dataset ID already existing. Next available ID:", next_id))
+  }
 
   dsdir <-
     file.path(base_path,
@@ -53,3 +56,4 @@ init_script <- function(dataset_id, workdir) {
     file.path(workdir, "EML_generation")
   ))
 }
+
