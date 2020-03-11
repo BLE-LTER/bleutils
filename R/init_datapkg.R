@@ -10,6 +10,14 @@
 init_datapkg <- function(dataset_id,
                          dataset_nickname,
                          base_path = "K:/Data") {
+  stopifnot(dataset_id %% 1 == 0, "Dataset IDs should be integers")
+
+  ## check for exisiting IDs
+  dirs <- list.files(base_path)
+  ids <- sapply(dirs, substr, 1, 1)
+
+  stopifnot(!(dataset_id %in% as.integer(ids)), "Dataset ID already existing")
+
   dsdir <-
     file.path(base_path,
               paste0(dataset_id, "_", dataset_nickname))
