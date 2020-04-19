@@ -5,7 +5,7 @@
 \title{Rename data columns according to metadata.}
 \usage{
 rename_attributes(meta_list, dataset_id, entity, file_dir = getwd(),
-  filename = "", x)
+  filename = "", x, append_units = T)
 }
 \arguments{
 \item{meta_list}{(character) A list of dataframes containing metadata returned by \code{\link{get_meta}}.}
@@ -19,6 +19,8 @@ rename_attributes(meta_list, dataset_id, entity, file_dir = getwd(),
 \item{filename}{(character) Filename. Defaults to "", in which case the entity metadata will be read to find filename.}
 
 \item{x}{R object. If specified, will skip looking for entity file altogether.}
+
+\item{append_units}{(logical) If TRUE, will append abbreviated units (see vw_custom_units) to column names as specified in metabase. Defaults to TRUE.}
 }
 \value{
 The data table entity with renamed columns.
