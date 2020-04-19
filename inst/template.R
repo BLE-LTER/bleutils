@@ -11,9 +11,15 @@ library(EML)
 library(MetaEgress)
 library(bleutils)
 
+# get metadata from metabase
+# type in username and password in the R console
+metadata <- append_units(get_meta(dbname = "ble_metabase",
+                     dataset_ids = datasetid,
+                     host = 'localhost')) # Tim: replace with An's IP address
+
 # Read in data from folder
-
-
+frompi <- file.path(getwd(), "..", "..", "FromPI")
+clean <- file.path(getwd(), "..")
 
 # Process data here
 
@@ -24,13 +30,13 @@ library(bleutils)
 
 # get metadata from metabase
 # type in username and password in the R console
-metadata <- get_meta(dbname = "ble_metabase",
+metadata <- append_units(get_meta(dbname = "ble_metabase",
                      dataset_ids = datasetid,
-                     host = 'localhost') # Tim: replace with An's IP address
+                     host = 'localhost')) # Tim: replace with An's IP address
 
 # create entities in emld list structure
 entities_datasetid <- create_entity_all(metadata,
-                                        file_dir = here::here(),
+                                        file_dir = clean,
                                         dataset_id = datasetid)
 
 # create EML in emld list structure
@@ -41,7 +47,8 @@ tryCatch({
     write_eml(eml_datasetid, file = paste0("EML_", datasetid, "_", Sys.Date(), ".xml"))
 },
 error = function(e) {
-  error(e)
+  stop(e)
 })
+
 
 
