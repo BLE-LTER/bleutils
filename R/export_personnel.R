@@ -53,7 +53,7 @@ export_personnel <-
     dbDisconnect(con)
 
     query_df[["datasetid"]] <- paste0("knb-lter-ble.", query_df[["datasetid"]])
-
+    query_df[is.na(query_df[["middlename"]]), "middlename"] <- ""
     if (write_to_file) {
       write.csv(query_df, file = file.path(file_dir, paste0("BLE_LTER_", paste0(dataset_ids, collapse = "_"), "_personnel.csv")), row.names = FALSE)
     }
