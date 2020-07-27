@@ -7,7 +7,7 @@
 #'
 #' @export
 
-sort_cp_data <- function(data, type){
+sort_cp_rows <- function(data, type){
   stopifnot(c("node", "lagoon", "station") %in% colnames(data))
  sort_by <- order(data[["node"]],
                   data[["lagoon"]],
