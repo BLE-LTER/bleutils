@@ -4,8 +4,15 @@
 \alias{rename_attributes}
 \title{Rename data columns according to metadata.}
 \usage{
-rename_attributes(meta_list, dataset_id, entity, file_dir = getwd(),
-  filename = "", x, append_units = T)
+rename_attributes(
+  meta_list,
+  dataset_id,
+  entity,
+  file_dir = getwd(),
+  filename = "",
+  x,
+  append_units = T
+)
 }
 \arguments{
 \item{meta_list}{(character) A list of dataframes containing metadata returned by \code{\link{get_meta}}.}

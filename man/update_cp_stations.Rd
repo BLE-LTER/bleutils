@@ -4,9 +4,11 @@
 \alias{update_cp_stations}
 \title{Compare the station information to "canonical" source in Box and update if needed. Meant to be run occassionally from An's PC and within the bleutils Rproject to update the version of station info that this package uses to append new columns, for example.}
 \usage{
-
-  update_cp_stations(source_file = "C:/Users/atn893/Documents/Box Sync/Beaufort LTER/Core Program/BLE_LTER_CP_Stations.xlsx",
-  sheet = "lookup")
+update_cp_stations(
+ 
+    source_file = "C:/Users/atn893/Documents/Box Sync/Beaufort LTER/Core Program/BLE_LTER_CP_Stations.xlsx",
+  sheet = "lookup"
+)
 }
 \arguments{
 \item{source_file}{(character) Full path to canonical file used to store station codes, names, lat/lons, habitat type. Defaults to "C:/Users/atn893/Documents/Box Sync/Beaufort LTER/Core Program/BLE_LTER_CP_Stations.xlsx" which works on An's PC.}

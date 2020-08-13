@@ -4,9 +4,17 @@
 \alias{export_personnel}
 \title{Connect to metabase and query for personnel list.}
 \usage{
-export_personnel(dbname = "ble_metabase", schema = "pkg_mgmt",
-  dataset_ids, host = "localhost", port = 5432, user = NULL,
-  password = NULL, write_to_file = TRUE, file_dir = getwd())
+export_personnel(
+  dbname = "ble_metabase",
+  schema = "pkg_mgmt",
+  dataset_ids,
+  host = "localhost",
+  port = 5432,
+  user = NULL,
+  password = NULL,
+  write_to_file = TRUE,
+  file_dir = getwd()
+)
 }
 \arguments{
 \item{dbname}{(character) name of database. Defaults to "ble_metabase".}
