@@ -6,4 +6,4 @@ November 4th 2019
 
 Installation:
 
-`devtools::install_github("BLE-LTER/MetaEgress")`
+`devtools::install_github("BLE-LTER/bleutils")`
