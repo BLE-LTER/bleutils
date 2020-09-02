@@ -2,7 +2,7 @@ Package: bleutils
 Type: Package
 Title: Utility functions for BLE LTER IM team
 Version: 0.1.0
-Author: person("An T.", "Nguyen", email = "enthusiast@utexas.edu", role = c("aut", "cre"))
+Authors@R: person("An T.", "Nguyen", email = "enthusiast@utexas.edu", role = c("aut", "cre"))
 Description: Utility functions for BLE LTER IM team
 License: What license is it under?
 Encoding: UTF-8
