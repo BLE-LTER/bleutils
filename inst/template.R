@@ -24,9 +24,7 @@ clean <- file.path(getwd(), "..")
 # Process data here
 
 
-# -------------- #
 # EML generation
-# execute this block line by line and you'll get an EML file!
 
 # get metadata from metabase
 # type in username and password in the R console
