@@ -5,7 +5,7 @@
 \alias{station_info}
 \title{BLE LTER Core Program, information on core sampling stations}
 \format{
-An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 33 rows and 8 columns.
+An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 38 rows and 9 columns.
 }
 \usage{
 station_info
