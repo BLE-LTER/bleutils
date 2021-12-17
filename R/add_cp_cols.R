@@ -6,9 +6,16 @@
 #' @export
 
 add_cp_cols <- function(df, station_code_col = "station") {
-  # TODO: check existing data for columns first before merging
+  # check existing data for columns first before merging
+  cols <- c(setdiff(colnames(station_info), colnames(df)))
+  if ("station_id" %in% cols) {
+    cols = cols
+  } else {
+    cols <- c(cols, "station_id")
+  }
 
-  df <- merge(df, bleutils::station_info, by.x = station_code_col, by.y = "station_id")
+  # merge
+  df <- merge(df, station_info[cols], by.x = station_code_col, by.y = "station_id")
   return(df)
 }
 
