@@ -18,7 +18,7 @@ init_datapkg <- function(dataset_id,
 
   if (dataset_id %in% ids) {
     next_id <- max(ids, na.rm = T) + 1
-    stop(paste("Dataset ID already existing. Next available ID:", next_id))
+    stop(paste("This dataset ID already exists. Next available ID:", next_id))
   }
 
   dsdir <-
@@ -38,23 +38,31 @@ init_datapkg <- function(dataset_id,
   }
   message(paste("Created directory structure under", dsdir))
 
-  init_script(dataset_id = dataset_id, workdir = workdir)
+  init_script(dataset_id = dataset_id, workdir = workdir, type = "init")
 }
 
 #' Initiate processing script from template
-#'
-#'
+#' @param dataset_id (numeric) Dataset ID
+#' @param workdir (character)
+#' @param type (character) either "init" or "update" for new or returning data packages respectively. The difference is in the contents of the script. Returning data packages get a script with a section where the data from the last revision on EDI's production is downloaded and used as the basis for appending new data onto.
 
-init_script <- function(dataset_id, workdir) {
+init_script <- function(dataset_id, workdir, type) {
+  if (type == "init") {
   template <-
-    readLines(system.file("template.R", package = "bleutils"))
+    readLines(system.file("template_init.R", package = "bleutils"))
+  } else if (type == "update") {
+    template <-
+      readLines(system.file("template_update.R", package = "bleutils"))
+  } else {
+    stop()
+  }
   template <- gsub("datasetid", dataset_id, template)
-  script_name <- paste0("dataset", dataset_id, ".R")
+  script_name <- paste0("dataset", dataset_id, "_", format(Sys.Date(), "%Y%m"), ".R")
   writeLines(template, file.path(workdir, paste0("EML_RProject_", dataset_id), script_name))
   message(paste(
-    "Created from template processing script",
+    "Created from template: script",
     script_name,
-    "under",
+    "under directory",
     file.path(workdir, paste0("EML_RProject_", dataset_id))
   ))
 }

@@ -1,5 +1,5 @@
 #
-# Processing script for BLE LTER dataset ID datasetid
+# Processing script for the first upload of BLE LTER dataset ID datasetid
 # This script is generated from a templated housed under the R package bleutils
 # With dataset-specific additions
 
