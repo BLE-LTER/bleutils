@@ -31,14 +31,16 @@ init_datapkg <- function(dataset_id,
   if (!dir.exists(file.path(dsdir, "FromPI")))
     dir.create(file.path(dsdir, "FromPI"))
 
-  workdir <- file.path(dsdir, "Clean")
-  if (!dir.exists(workdir)) {
-    dir.create(workdir)
-    dir.create(file.path(workdir, paste0("EML_RProject_", dataset_id)))
+  if (!dir.exists(file.path(dsdir, "Clean"))) {
+    dir.create(file.path(dsdir, "Clean"))
   }
+  if (!dir.exists(file.path(dsdir, paste0("EML_RProject_", dataset_id)))) {
+    dir.create(file.path(dsdir, paste0("EML_RProject_", dataset_id)))
+  }
+
   message(paste("Created directory structure under", dsdir))
 
-  init_script(dataset_id = dataset_id, workdir = workdir, type = "init")
+  init_script(dataset_id = dataset_id, workdir = dsdir, type = "init")
 }
 
 #' Initiate processing script from template
