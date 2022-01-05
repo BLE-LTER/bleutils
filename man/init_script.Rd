@@ -4,7 +4,14 @@
 \alias{init_script}
 \title{Initiate processing script from template}
 \usage{
-init_script(dataset_id, workdir)
+init_script(dataset_id, workdir, type)
+}
+\arguments{
+\item{dataset_id}{(numeric) Dataset ID}
+
+\item{workdir}{(character)}
+
+\item{type}{(character) either "init" or "update" for new or returning data packages respectively. The difference is in the contents of the script. Returning data packages get a script with a section where the data from the last revision on EDI's production is downloaded and used as the basis for appending new data onto.}
 }
 \description{
 Initiate processing script from template

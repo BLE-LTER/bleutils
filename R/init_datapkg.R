@@ -54,7 +54,7 @@ init_script <- function(dataset_id, workdir, type) {
     template <-
       readLines(system.file("template_update.R", package = "bleutils"))
   } else {
-    stop()
+    stop("type needs to be init or update")
   }
   template <- gsub("datasetid", dataset_id, template)
   script_name <- paste0("dataset", dataset_id, "_", format(Sys.Date(), "%Y%m"), ".R")
