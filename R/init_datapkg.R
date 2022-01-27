@@ -28,6 +28,7 @@ init_datapkg <- function(dataset_id,
   if (!dir.exists(dsdir))
     dir.create(dsdir)
 
+  # create sub-directories
   if (!dir.exists(file.path(dsdir, "FromPI")))
     dir.create(file.path(dsdir, "FromPI"))
 
@@ -38,7 +39,13 @@ init_datapkg <- function(dataset_id,
     dir.create(file.path(dsdir, paste0("EML_RProject_", dataset_id)))
   }
 
+  print(dsdir)
+  # write README
+  readme <- readLines(system.file("readme.txt", package = "bleutils"))
+  writeLines(readme, file.path(dsdir, "README.txt"))
+
   message(paste("Created directory structure under", dsdir))
 
+  # init data procressing script
   init_script(dataset_id = dataset_id, workdir = dsdir, type = "init")
 }
