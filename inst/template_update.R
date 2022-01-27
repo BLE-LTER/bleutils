@@ -18,8 +18,8 @@ metadata <- append_units(get_meta(dbname = "ble_metabase",
                                   host = '10.157.18.83'))
 
 # Establish data folders
-frompi <- file.path(getwd(), "..", "..", "FromPI")
-clean <- file.path(getwd(), "..")
+frompi <- file.path(getwd(), "..", "FromPI")
+clean <- file.path(getwd(), "..", "Clean")
 
 # read previous revision's data from EDI for authoritative source
 # get newest revision number

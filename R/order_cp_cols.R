@@ -14,7 +14,12 @@ order_cp_cols <- function(data, type){
              if (type == "water") "water_column_position")
   end <- c(
     if (type == "water") "collection_method",
-        "station_name", "latitude", "longitude", "habitat_type", "station_sampling_priority")
+    "station_name",
+    "latitude",
+    "longitude",
+    "station_depth",
+    "habitat_type",
+    "station_sampling_priority")
 
   data_cols <- setdiff(colnames(data), c(begin, end))
 
