@@ -17,7 +17,6 @@ order_cp_cols <- function(data, type){
     "station_name",
     "latitude",
     "longitude",
-    "station_depth",
     "habitat_type",
     "station_sampling_priority")
 
