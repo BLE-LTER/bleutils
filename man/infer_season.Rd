@@ -10,8 +10,6 @@ infer_season(data, date_col = "date_time")
 \item{data}{data.frame A date.frame with date}
 
 \item{date_col}{character Name of column with dates or date-times. Please convert this column into a Date format first (not just strings containing dates).}
-
-\item{format}{for}
 }
 \value{
 A vector of strings: field campaign seasons in same order as dates or date-times supplied.

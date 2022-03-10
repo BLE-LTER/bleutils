@@ -2,9 +2,8 @@
 #' @description Infer BLE LTER field campaign season from date or date-times: dates in May or earlier is under ice, June to 15th of July is break up, and 16th of July or later is open water. Do not use with mooring data.
 #' @param data data.frame A date.frame with date
 #' @param date_col character Name of column with dates or date-times. Please convert this column into a Date format first (not just strings containing dates).
-#' @param format for
 #' @return A vector of strings: field campaign seasons in same order as dates or date-times supplied.
-#' @import lubridate
+#' @importFrom lubridate month mday
 #' @export
 
 infer_season <-
