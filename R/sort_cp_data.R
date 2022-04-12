@@ -16,13 +16,13 @@ sort_cp_rows <- function(data, type){
     sort_by <- order(data[["node"]],
                      data[["lagoon"]],
                      data[["station"]],
-                     data[["date_collected"]],
+                     data[["date_time"]],
                      data[["water_column_position"]])
   } else if (type == "sediment") {
     sort_by <- order(data[["node"]],
                      data[["lagoon"]],
                      data[["station"]],
-                     data[["date_collected"]])
+                     data[["date_time"]])
   } else if (type == "mooring") {
     sort_by <- order(data[["station"]],
                      data[["date_time"]])
