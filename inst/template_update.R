@@ -23,15 +23,15 @@ clean <- file.path(getwd(), "..", "Clean")
 
 # read previous revision's data from EDI for authoritative source
 # get newest revision number
-rev <- max(as.integer(EDIutils::api_list_data_package_revisions("knb-lter-ble", datasetid)))
+rev <- max(as.integer(EDIutils::list_data_package_revisions("knb-lter-ble", datasetid)))
 pkg_id <- paste0("knb-lter-ble.", datasetid, ".", rev) # the revision number is left
 # get entity names
-entity_ids <- EDIutils::api_list_data_entities(pkg_id)[["identifier"]]
-entity_names <- sapply(entity_ids, EDIutils::api_read_data_entity_name, package.id = pkg_id)
+entity_ids <- EDIutils::list_data_entities(pkg_id)[["identifier"]]
+entity_names <- sapply(entity_ids, EDIutils::read_data_entity_name, package.id = pkg_id)
 
 # decide which entity to get
 grab <- 1 # change as needed
-url <- EDIutils::api_read_data_package(pkg_id)[[grab]]
+url <- EDIutils::read_data_package(pkg_id)[[grab]]
 infile <- tempfile()
 try(download.file(url, infile, method="curl"))
 prev_data <- data.table::fread(infile) # use prev_data from now on
