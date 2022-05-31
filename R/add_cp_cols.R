@@ -7,7 +7,7 @@
 
 add_cp_cols <- function(df, station_code_col = "station") {
   # check existing data for columns first before merging
-  cols <- c(setdiff(colnames(station_info), colnames(df)))
+  cols <- c(setdiff(colnames(stations), colnames(df)))
   if ("station_id" %in% cols) {
     cols = cols
   } else {

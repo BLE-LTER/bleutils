@@ -7,7 +7,7 @@
 update_cp_stations <- function(source_file = "C:/Users/atn893/Documents/Box Sync/Beaufort LTER/Core Program/BLE_LTER_CP_Stations.xlsx",
                                sheet = "lookup") {
   canon <- readxl::read_excel(source_file, sheet = sheet)
-  if (exists("stations", where = "package:bleutils") && isTRUE(all.equal(bleutils::station_info, canon)) && all(colnames(station_info) == colnames(canon))) message("Package version of station info is up-to-date. No action taken.")
+  if (exists("stations", where = "package:bleutils") && isTRUE(all.equal(bleutils::stations, canon)) && all(colnames(station_info) == colnames(canon))) message("Package version of station info is up-to-date. No action taken.")
   else {
     message("Nope. Something's changed. Updating package version of station info.")
     stations <- canon
