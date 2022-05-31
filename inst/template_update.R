@@ -26,11 +26,10 @@ clean <- file.path(getwd(), "..", "Clean")
 rev <- max(as.integer(EDIutils::list_data_package_revisions("knb-lter-ble", datasetid)))
 pkg_id <- paste0("knb-lter-ble.", datasetid, ".", rev) # the revision number is left
 # get entity names
-entity_ids <- EDIutils::list_data_entities(pkg_id)
-entity_names <- sapply(entity_ids, EDIutils::read_data_entity_name, package.id = pkg_id)
+entity_names <- EDIutils::read_data_entity_names(packageId = pkg_id)
+# examine entity names here and decide which entity to get
 
-# decide which entity to get
-grab <- 1 # change as needed
+grab <- 1 # entity to get, change as needed
 url <- EDIutils::read_data_package(pkg_id)[[grab]]
 infile <- tempfile()
 try(download.file(url, infile, method="curl"))
