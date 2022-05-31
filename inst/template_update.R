@@ -26,7 +26,7 @@ clean <- file.path(getwd(), "..", "Clean")
 rev <- max(as.integer(EDIutils::list_data_package_revisions("knb-lter-ble", datasetid)))
 pkg_id <- paste0("knb-lter-ble.", datasetid, ".", rev) # the revision number is left
 # get entity names
-entity_ids <- EDIutils::list_data_entities(pkg_id)[["identifier"]]
+entity_ids <- EDIutils::list_data_entities(pkg_id)
 entity_names <- sapply(entity_ids, EDIutils::read_data_entity_name, package.id = pkg_id)
 
 # decide which entity to get
