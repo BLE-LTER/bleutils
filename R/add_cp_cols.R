@@ -15,6 +15,6 @@ add_cp_cols <- function(df, station_code_col = "station") {
   }
 
   # merge
-  df <- merge(df, station_info[cols], by.x = station_code_col, by.y = "station_id")
+  df <- merge(df, stations[cols], by.x = station_code_col, by.y = "station_id")
   return(df)
 }
