@@ -10,8 +10,6 @@
 #' @param x R object. If specified, will skip looking for entity file altogether.
 #' @param append_units (logical) If TRUE, will append abbreviated units (see vw_custom_units) to column names as specified in metabase. Defaults to TRUE.
 #' @return The data table entity with renamed columns.
-#' @importFrom data.table fread
-#' @importFrom dplyr inner_join
 #' @export
 
 
