@@ -14,7 +14,6 @@
 #'
 #' @return (data.frame) A data frame of personnel associated with specified dataset IDs as queried from metabase.
 #'
-#' @import RPostgres
 #' @export
 
 export_personnel <-
