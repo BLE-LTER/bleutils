@@ -9,7 +9,7 @@ rename_attributes(
   dataset_id,
   entity,
   file_dir = getwd(),
-  filename = "",
+  file_name = "",
   x,
   append_units = T
 )
@@ -22,8 +22,6 @@ rename_attributes(
 \item{entity}{(numeric) An entity number.}
 
 \item{file_dir}{(character) Path to directory containing flat files (data files). Defaults to current R working directory.}
-
-\item{filename}{(character) Filename. Defaults to "", in which case the entity metadata will be read to find filename.}
 
 \item{x}{R object. If specified, will skip looking for entity file altogether.}
 

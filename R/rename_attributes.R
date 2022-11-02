@@ -6,9 +6,10 @@
 #' @param dataset_id (numeric) A dataset ID.
 #' @param entity (numeric) An entity number.
 #' @param file_dir (character) Path to directory containing flat files (data files). Defaults to current R working directory.
-#' @param filename (character) Filename. Defaults to "", in which case the entity metadata will be read to find filename.
 #' @param x R object. If specified, will skip looking for entity file altogether.
+#' @param file_name
 #' @param append_units (logical) If TRUE, will append abbreviated units (see vw_custom_units) to column names as specified in metabase. Defaults to TRUE.
+#'
 #' @return The data table entity with renamed columns.
 #' @export
 
@@ -18,7 +19,7 @@ rename_attributes <-
            dataset_id,
            entity,
            file_dir = getwd(),
-           filename = "",
+           file_name = "",
            x,
            append_units = T) {
 
