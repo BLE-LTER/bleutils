@@ -125,18 +125,18 @@
 <h4 id="appending-units-to-metadata-attribute-names">Appending units to metadata attribute names<a class="anchor" aria-label="anchor" href="#appending-units-to-metadata-attribute-names"></a>
 </h4>
 <p>We decided to append abbreviated units at the end of attribute names (see BLE handbook). To facilitate that, wrap calls to <code><a href="https://rdrr.io/pkg/MetaEgress/man/get_meta.html" class="external-link">MetaEgress::get_meta()</a></code> in <code><a href="reference/append_units.html">bleutils::append_units</a></code>. This saves us from having to actually have the units in attribute names in metabase, and makes updates easier.</p>
-<pre><code>metadata &lt;- </code></pre>
+<p>From this point example commands will not work without being able to connect to an instance of metabase. Feel free to run them if your machine can connect to an instance of metabase though.</p>
+<pre><code># metadata &lt;- MetaEgress::get_metadata(dbname = "ble_metabase", 
+                                       dataset_ids = 13, 
+                                       user = "insert_or_enter_in_console", 
+                                       password = "insert_or_enter_in_console")
+# metadata &lt;- append_units(metadata)</code></pre>
 </div>
 <div class="section level4">
 <h4 id="renaming-attributes-to-match-metadata">Renaming attributes to match metadata<a class="anchor" aria-label="anchor" href="#renaming-attributes-to-match-metadata"></a>
 </h4>
 <p>Quick convenience function to rename all columns in a data.frame to what’s in the metadata. The usual assumptions apply: that there are as many columns in data as in metadata, and they are ordered the same way.</p>
-<pre><code># These following lines are commented out because they will not work without being able to connect to an instance of metabase
-# metadata &lt;- MetaEgress::get_metadata(dbname = "ble_metabase", 
-                                       dataset_ids = 13, 
-                                       user = "insert_or_enter_in_console", 
-                                       password = "insert_or_enter_in_console")
-# df &lt;- rename_attributes(metadata,
+<pre><code># df &lt;- rename_attributes(metadata,
                           dataset_id = 13,
                           entity = 1,
                           x = df,
@@ -146,9 +146,7 @@
 <h4 id="exporting-personnel-from-metabase-to-csv">Exporting personnel from metabase to CSV<a class="anchor" aria-label="anchor" href="#exporting-personnel-from-metabase-to-csv"></a>
 </h4>
 <p>BLE’s Core Program datasets include a CSV to personnel with the years of data they were involved in. This information is stored in metabase and is specific to BLE. <code><a href="https://rdrr.io/pkg/MetaEgress/man/get_meta.html" class="external-link">MetaEgress::get_meta()</a></code> doesn’t query this information, so use:</p>
-<pre><code># These following lines are commented out because they will not work without being able to connect to an instance of metabase
-
-# export_personnel(dataset_ids = 13,
+<pre><code># export_personnel(dataset_ids = 13,
                    file_name = "BLE_LTER_chlorophyll_personnel.csv")</code></pre>
 </div>
 </div>

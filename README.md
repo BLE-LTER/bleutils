@@ -89,8 +89,15 @@ The templates live in `inst/` if updates are needed.
 
 We decided to append abbreviated units at the end of attribute names (see BLE handbook). To facilitate that, wrap calls to `MetaEgress::get_meta()` in `bleutils::append_units`. This saves us from having to actually have the units in attribute names in metabase, and makes updates easier.
 
+From this point example commands will not work without being able to connect to an instance of metabase. Feel free to run them if your machine can connect to an instance of metabase though.
+
+
 ```
-metadata <- 
+metadata <- MetaEgress::get_metadata(dbname = "ble_metabase",
+                                       dataset_ids = 13, 
+                                       user = "insert_or_enter_in_console", 
+                                       password = "insert_or_enter_in_console")
+metadata <- append_units(metadata)
 ```
 
 #### Renaming attributes to match metadata
@@ -98,12 +105,7 @@ metadata <-
 Quick convenience function to rename all columns in a data.frame to what's in the metadata. The usual assumptions apply: that there are as many columns in data as in metadata, and they are ordered the same way.
 
 ```
-# These following lines are commented out because they will not work without being able to connect to an instance of metabase
-# metadata <- MetaEgress::get_metadata(dbname = "ble_metabase", 
-                                       dataset_ids = 13, 
-                                       user = "insert_or_enter_in_console", 
-                                       password = "insert_or_enter_in_console")
-# df <- rename_attributes(metadata,
+df <- rename_attributes(metadata,
                           dataset_id = 13,
                           entity = 1,
                           x = df,
@@ -115,8 +117,6 @@ Quick convenience function to rename all columns in a data.frame to what's in th
 BLE's Core Program datasets include a CSV to personnel with the years of data they were involved in. This information is stored in metabase and is specific to BLE. `MetaEgress::get_meta()` doesn't query this information, so use:
 
 ```
-# These following lines are commented out because they will not work without being able to connect to an instance of metabase
-
-# export_personnel(dataset_ids = 13,
-                   file_name = "BLE_LTER_chlorophyll_personnel.csv")
+export_personnel(dataset_ids = 13,
+                 file_name = "BLE_LTER_chlorophyll_personnel.csv")
 ```
