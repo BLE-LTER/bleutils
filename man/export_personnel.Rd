@@ -13,7 +13,8 @@ export_personnel(
   user = NULL,
   password = NULL,
   write_to_file = TRUE,
-  file_dir = getwd()
+  file_dir = getwd(),
+  file_name = NULL
 )
 }
 \arguments{
@@ -31,9 +32,11 @@ export_personnel(
 
 \item{password}{(character) (optional) password to user. Use to save time. If not supplied, the R console will prompt you to enter a password.}
 
-\item{write_to_file}{(logical) Whether to write to file. Defaults to TRUE. File name will have format "BLE_CP_<dataset ID>_personnel.csv".}
+\item{write_to_file}{(logical) Whether to write to file. Defaults to TRUE.}
 
 \item{file_dir}{(character) Full path of directory to write file to. Defaults to current working directory.}
+
+\item{file_name}{(character) File name, will default to "BLE_LTER_(dataset_ids)_personnel.csv" if not specified.}
 }
 \value{
 (data.frame) A data frame of personnel associated with specified dataset IDs as queried from metabase.

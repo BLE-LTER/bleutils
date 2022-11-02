@@ -9,8 +9,9 @@
 #' @param port (numeric) port number. Defaults to 5432.
 #' @param user (character) (optional) username to use in connecting to database. Use to save time. If not supplied, the R console will prompt you to enter a username.
 #' @param password (character) (optional) password to user. Use to save time. If not supplied, the R console will prompt you to enter a password.
-#' @param write_to_file (logical) Whether to write to file. Defaults to TRUE. File name will have format "BLE_CP_<dataset ID>_personnel.csv".
+#' @param write_to_file (logical) Whether to write to file. Defaults to TRUE.
 #' @param file_dir (character) Full path of directory to write file to. Defaults to current working directory.
+#' @param file_name (character) File name, will default to "BLE_LTER_(dataset_ids)_personnel.csv" if not specified.
 #'
 #' @return (data.frame) A data frame of personnel associated with specified dataset IDs as queried from metabase.
 #'
@@ -25,7 +26,9 @@ export_personnel <-
            user = NULL,
            password = NULL,
            write_to_file = TRUE,
-           file_dir = getwd()) {
+           file_dir = getwd(),
+           file_name = NULL)
+  {
     driver <- RPostgres::Postgres()
     con <- dbConnect(
       drv = driver,
@@ -51,10 +54,18 @@ export_personnel <-
     RPostgres::dbClearResult(result)
     dbDisconnect(con)
 
-    query_df[["datasetid"]] <- paste0("knb-lter-ble.", query_df[["datasetid"]])
+    query_df[["datasetid"]] <-
+      paste0("knb-lter-ble.", query_df[["datasetid"]])
     query_df[is.na(query_df[["middlename"]]), "middlename"] <- ""
     if (write_to_file) {
-      write.csv(query_df, file = file.path(file_dir, paste0("BLE_LTER_", paste0(dataset_ids, collapse = "_"), "_personnel.csv")), row.names = FALSE)
+      if (is.null(file_name)) file_name <- paste0(
+        "BLE_LTER_",
+        paste0(dataset_ids, collapse = "_"),
+        "_personnel.csv"
+      )
+      write.csv(query_df,
+                file = file.path(file_dir, file_name),
+                row.names = FALSE)
     }
     message("You might want to erase command history, since user password to your database was given.")
     return(query_df)
