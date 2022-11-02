@@ -35,9 +35,9 @@
     </div>
 
     <div class="section level2">
-      <h2 id="all-functions">All functions<a class="anchor" aria-label="anchor" href="#all-functions"></a></h2>
+      <h2 id="manipulating-core-program-data">Manipulating Core Program data<a class="anchor" aria-label="anchor" href="#manipulating-core-program-data"></a></h2>
       
-      
+      <p class="section-desc"></p><p>Functions for common tasks regarding BLE’s Core Program data</p>
 
       
     </div><div id="" class="section level2">
@@ -53,25 +53,36 @@
 Add columns: station name, lat/lon, habitat type, given BLE LTER Core Program station code</dd>
       </dl><dl><dt>
           
-          <code><a href="append_units.html">append_units()</a></code> 
+          <code><a href="update_cp_stations.html">update_cp_stations()</a></code> 
         </dt>
-        <dd>Append units to column names</dd>
-      </dl><dl><dt>
-          
-          <code><a href="cp_data.html">cp_data</a></code> 
-        </dt>
-        <dd>example of BLE LTER Core Program data with various formatting issues. use to test functions in this package</dd>
-      </dl><dl><dt>
-          
-          <code><a href="export_personnel.html">export_personnel()</a></code> 
-        </dt>
-        <dd>Connect to metabase and query for personnel list.</dd>
+        <dd>Compare the station information to "canonical" source in Box and update if needed. Meant to be run occassionally from An's PC and within the bleutils Rproject to update the version of station info that this package uses to append new columns, for example.</dd>
       </dl><dl><dt>
           
           <code><a href="infer_season.html">infer_season()</a></code> 
         </dt>
         <dd>Infer BLE LTER field campaign season from date or date-times</dd>
       </dl><dl><dt>
+          
+          <code><a href="order_cp_cols.html">order_cp_cols()</a></code> 
+        </dt>
+        <dd>Order Core Program data columns</dd>
+      </dl><dl><dt>
+          
+          <code><a href="sort_cp_rows.html">sort_cp_rows()</a></code> 
+        </dt>
+        <dd>Sort Core Program data</dd>
+      </dl></div><div class="section level2">
+      <h2 id="other-useful-im-tasks">Other useful IM tasks<a class="anchor" aria-label="anchor" href="#other-useful-im-tasks"></a></h2>
+      
+      <p class="section-desc"></p><p>Functions for common tasks BLE IM team might need</p>
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
           
           <code><a href="init_datapkg.html">init_datapkg()</a></code> 
         </dt>
@@ -84,9 +95,9 @@ Create these following items: folder structure, R project, reusable R script fro
         <dd>Generate R processing script from template</dd>
       </dl><dl><dt>
           
-          <code><a href="order_cp_cols.html">order_cp_cols()</a></code> 
+          <code><a href="append_units.html">append_units()</a></code> 
         </dt>
-        <dd>Order Core Program data columns</dd>
+        <dd>Append units to column names</dd>
       </dl><dl><dt>
           
           <code><a href="rename_attributes.html">rename_attributes()</a></code> 
@@ -94,21 +105,33 @@ Create these following items: folder structure, R project, reusable R script fro
         <dd>Rename data columns according to metadata.</dd>
       </dl><dl><dt>
           
-          <code><a href="sort_cp_rows.html">sort_cp_rows()</a></code> 
+          <code><a href="export_personnel.html">export_personnel()</a></code> 
         </dt>
-        <dd>Sort Core Program data</dd>
+        <dd>Connect to metabase and query for personnel list.</dd>
+      </dl></div><div class="section level2">
+      <h2 id="datasets-included-with-the-package">Datasets included with the package<a class="anchor" aria-label="anchor" href="#datasets-included-with-the-package"></a></h2>
+      
+      
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
+          
+          <code><a href="cp_data.html">cp_data</a></code> 
+        </dt>
+        <dd>example of BLE LTER Core Program data with various formatting issues. use to test functions in this package</dd>
       </dl><dl><dt>
           
           <code><a href="stations.html">stations</a></code> 
         </dt>
         <dd>BLE LTER Core Program, information on core sampling stations</dd>
-      </dl><dl><dt>
-          
-          <code><a href="update_cp_stations.html">update_cp_stations()</a></code> 
-        </dt>
-        <dd>Compare the station information to "canonical" source in Box and update if needed. Meant to be run occassionally from An's PC and within the bleutils Rproject to update the version of station info that this package uses to append new columns, for example.</dd>
       </dl></div>
-  </main></div>
+  </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
+    </nav></aside></div>
 
 
     <footer><div class="pkgdown-footer-left">

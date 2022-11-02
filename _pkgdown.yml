@@ -1,4 +1,26 @@
 url: ~
 template:
   bootstrap: 5
-
+  bootswatch: litera
+reference:
+- title: "Manipulating Core Program data"
+  desc: >
+    Functions for common tasks regarding BLE's Core Program data
+  contents:
+  - add_cp_cols
+  - update_cp_stations
+  - infer_season
+  - order_cp_cols
+  - sort_cp_rows
+- title: "Other useful IM tasks"
+  desc: "Functions for common tasks BLE IM team might need"
+  contents:
+  - init_datapkg
+  - init_script
+  - append_units
+  - rename_attributes
+  - export_personnel
+- title: "Datasets included with the package"
+  contents:
+  - cp_data
+  - stations
