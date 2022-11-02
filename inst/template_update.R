@@ -1,7 +1,7 @@
 #
 # Processing script for an update to BLE LTER dataset ID datasetid
-# This script is generated from a templated housed under the R package bleutils
-# With dataset-specific additions
+# This script is generated from a template housed under the R package bleutils
+# with dataset-specific additions
 
 # Setup
 
