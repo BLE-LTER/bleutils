@@ -5,14 +5,21 @@
 \title{Create folder structure for a new BLE LTER data package ID
 Create these following items: folder structure, R project, reusable R script from template}
 \usage{
-init_datapkg(dataset_id, dataset_nickname, base_path = "K:/Data")
+init_datapkg(
+  dataset_id,
+  dataset_nickname,
+  base_path = "K:/Data",
+  data_year = NULL
+)
 }
 \arguments{
 \item{dataset_id}{(numeric) Dataset ID}
 
 \item{dataset_nickname}{(character)}
 
-\item{base_path}{(character) Full file path to parent directory to initiate under. Defaults to "K:/Data", which is "\\austin.utexas.edu/disk/engr/research/crwr/projects/BLE-LTER/Data" mapped to the K drive on An's PC.}
+\item{base_path}{(character) Full file path to parent directory to initiate under. Defaults to "K:/Data", which is the shared BLE network drive, mapped to the K drive on An's PC.}
+
+\item{data_year}{(numeric) The year of data that the generated script will process. E.g. you may be working with 2021 data in 2022. Defaults to the current calendar year if not specified.}
 }
 \value{
 Nothing in R, but new folder structure and R script from template
