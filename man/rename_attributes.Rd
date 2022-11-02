@@ -23,6 +23,8 @@ rename_attributes(
 
 \item{file_dir}{(character) Path to directory containing flat files (data files). Defaults to current R working directory.}
 
+\item{file_name}{(character) File name to}
+
 \item{x}{R object. If specified, will skip looking for entity file altogether.}
 
 \item{append_units}{(logical) If TRUE, will append abbreviated units (see vw_custom_units) to column names as specified in metabase. Defaults to TRUE.}
