@@ -30,6 +30,8 @@ init_script <-
           data_year
         )
     }
+
+    # Read and format template
     if (type == "init") {
       template <-
         readLines(system.file("template_init.R", package = "bleutils"))
@@ -40,6 +42,7 @@ init_script <-
       stop("type needs to be init or update")
     }
     template <- gsub("datasetid", dataset_id, template)
+
     script_name <-
       paste0("dataset", dataset_id, "_", format(Sys.Date(), "%Y%m"), ".R")
     writeLines(template, file.path(file_dir, script_name))

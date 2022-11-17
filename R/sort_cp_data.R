@@ -1,6 +1,6 @@
 #' @title Sort Core Program data
 #' @description Sort Core Program data in preferred sort order: node, lagoon, station, date/date_time, then water_column_position if applicable
-#'@param data (data.frame) A data.frame containing Core Program data. Columns already need to be ordered in the particular CP order. Use bleutils::order_cp_cols for this. Columns names also need to be named according to standard CP column names. Use bleutils::reaname_attributes for this.
+#'@param data (data.frame) A data.frame containing Core Program data. Columns already need to be ordered in the particular CP order. Use bleutils::order_cp_cols for this. Columns names also need to be named according to standard CP column names. Use bleutils::rename_attributes for this.
 #' @param type (character) Type of CP data. Choose from "water", "sediment", or "mooring". This affects the columns on which to sort data.
 #'
 #' @return (data.frame) The same data but ordered.
