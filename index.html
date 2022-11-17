@@ -80,7 +80,7 @@
 </h4>
 <p><code>add_cp_cols</code> will add columns such as node, lagoon, lat/lon, etc… to a data.frame, provided a column of station codes, e.g. “EWLD1”. Use this to quickly add the required columns to a dataset.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/add_cp_cols.html">add_cp_cols</a></span><span class="op">(</span><span class="va">df</span>, station_code_col <span class="op">=</span> <span class="st">"station"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/add_cp_cols.html">add_cp_cols</a></span><span class="op">(</span><span class="va">df</span>, station_code_col <span class="op">=</span> <span class="st">"station"</span><span class="op">)</span></span></code></pre></div>
 <p>Note that this function relies on the <code>stations</code> data.frame packaged with <code>bleutils</code>. The canon copy of this is kept on Box. To check if <code>bleutils</code> has the latest version, use <code>update_cp_stations</code> and point it to where Box is on your local machine. If the Box version differs from what <code>bleutils</code> has, this will update the package version. If this happens, make sure to push the change to GitHub and re-install <code>bleutils</code> wherever it is used.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/update_cp_stations.html">update_cp_stations</a></span><span class="op">(</span>source_file <span class="op">=</span> <span class="st">"path_goes_here"</span><span class="op">)</span></span></code></pre></div>
@@ -88,23 +88,32 @@
 <div class="section level4">
 <h4 id="inferring-sampling-season-based-on-dates">Inferring sampling season based on dates<a class="anchor" aria-label="anchor" href="#inferring-sampling-season-based-on-dates"></a>
 </h4>
-<p><code>infer_season</code> outputs a vector of categorical season values (under ice/break up/open water) from a vector of date values (column in data.frame).</p>
+<p><code>infer_season</code> outputs a vector of categorical season values (under ice/break up/open water) from a vector of date values (column in data.frame). If the date vector is of type chr instead of Date or POSIXct (i.e., datetimes) as in the case of the example data, you will first need to convert the vector.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">df</span><span class="op">$</span><span class="va">season</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/infer_season.html">infer_season</a></span><span class="op">(</span><span class="va">df</span>, date_col <span class="op">=</span> <span class="st">"date_collected"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># Example when dates are chr, without a time portion, e.g., "6/27/2019"</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://lubridate.tidyverse.org" class="external-link">lubridate</a></span><span class="op">)</span></span>
+<span><span class="va">df</span><span class="op">$</span><span class="va">date_collected</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="fu"><a href="https://lubridate.tidyverse.org/reference/parse_date_time.html" class="external-link">parse_date_time</a></span><span class="op">(</span><span class="va">df</span><span class="op">$</span><span class="va">date_collected</span>, <span class="st">"mdy"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Now infer the season</span></span>
+<span><span class="va">df</span><span class="op">$</span><span class="va">season</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/infer_season.html">infer_season</a></span><span class="op">(</span><span class="va">df</span>, date_col <span class="op">=</span> <span class="st">"date_collected"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="order-data-columns">Order data columns<a class="anchor" aria-label="anchor" href="#order-data-columns"></a>
 </h4>
 <p>Order columns according to the standard BLE order. Check out the function documentation for the exact order depending on data type (water/sediment/mooring). Columns need to be named exactly as specified, so make sure that’s done before running this function.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/order_cp_cols.html">order_cp_cols</a></span><span class="op">(</span><span class="va">df</span>, type <span class="op">=</span> <span class="st">"water"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># In the example data, date_collected must be renamed to date_time</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span><span class="op">==</span><span class="st">"date_collected"</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="st">"date_time"</span></span>
+<span></span>
+<span><span class="co"># Now order the columns</span></span>
+<span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/order_cp_cols.html">order_cp_cols</a></span><span class="op">(</span><span class="va">df</span>, type <span class="op">=</span> <span class="st">"water"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="sort-data-rows">Sort data rows<a class="anchor" aria-label="anchor" href="#sort-data-rows"></a>
 </h4>
 <p>Order data rows according to the standard BLE order. Check out the function documentation for the exact order depending on data type (water/sediment/mooring). Columns need to be named exactly as specified, so make sure that’s done before running this function.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/sort_cp_rows.html">sort_cp_rows</a></span><span class="op">(</span><span class="va">df</span>, type <span class="op">=</span> <span class="st">"water"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/sort_cp_rows.html">sort_cp_rows</a></span><span class="op">(</span><span class="va">df</span>, type <span class="op">=</span> <span class="st">"water"</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level3">
@@ -116,16 +125,16 @@
 <p><code>init_datapkg</code> creates a directory structure and a templated R script for a new dataset. It will warn you if the dataset ID already exists (based on directory names in <code>base_path</code>) and messages the next available numeric ID.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/init_datapkg.html">init_datapkg</a></span><span class="op">(</span>base_path <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/getwd.html" class="external-link">getwd</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>             dataset_id <span class="op">=</span> <span class="fl">9999</span>,</span>
+<span>             dataset_id <span class="op">=</span> <span class="fl">9999L</span>,</span>
 <span>             dataset_nickname <span class="op">=</span> <span class="st">"test"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="initializing-a-data-processing-script">Initializing a data processing script<a class="anchor" aria-label="anchor" href="#initializing-a-data-processing-script"></a>
 </h4>
-<p><code>init_script</code> creates a R script and populates it from template. For a new dataset, <code>init_datapkg</code> calls <code>init_script(type = "init")</code> and there’s no further action needed R script. For updating existing datasets, use the argument <code>type = "update"</code>.</p>
+<p><code>init_script</code> creates an R script and populates it from template. For a new dataset, <code>init_datapkg</code> calls <code>init_script(type = "init")</code> and there’s no further action needed. For updating existing datasets, use the argument <code>type = "update"</code>. Note that the file directory must exist before running this function.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/init_script.html">init_script</a></span><span class="op">(</span>dataset_id <span class="op">=</span> <span class="fl">9999</span>,</span>
-<span>            workdir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/getwd.html" class="external-link">getwd</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"9999_test"</span>, <span class="st">"EML_generation"</span>, <span class="st">"2022"</span><span class="op">)</span>, </span>
+<span>            file_dir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/getwd.html" class="external-link">getwd</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"9999_test"</span>, <span class="st">"EML_RProject_9999"</span>, <span class="st">"2022"</span><span class="op">)</span>, </span>
 <span>            type <span class="op">=</span> <span class="st">"update"</span><span class="op">)</span></span></code></pre></div>
 <p>The main difference is that an update script also has code to pull the latest version of the dataset from EDI’s production server, so the new data can be appended to it.</p>
 <p>The templates live in <code>inst/</code> if updates are needed.</p>
@@ -136,27 +145,27 @@
 <p>We decided to append abbreviated units at the end of attribute names (see BLE handbook). To facilitate that, wrap calls to <code>MetaEgress::get_meta()</code> in <code><a href="reference/append_units.html">bleutils::append_units</a></code>. This saves us from having to actually have the units in attribute names in metabase, and makes updates easier.</p>
 <p>From this point example commands will not work without being able to connect to an instance of metabase. Feel free to run them if your machine can connect to an instance of metabase though.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">metadata</span> <span class="op">&lt;-</span> <span class="fu">MetaEgress</span><span class="fu">::</span><span class="fu">get_metadata</span><span class="op">(</span>dbname <span class="op">=</span> <span class="st">"ble_metabase"</span>,</span>
-<span>                                       dataset_ids <span class="op">=</span> <span class="fl">13</span>, </span>
-<span>                                       user <span class="op">=</span> <span class="st">"insert_or_enter_in_console"</span>, </span>
-<span>                                       password <span class="op">=</span> <span class="st">"insert_or_enter_in_console"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">metadata</span> <span class="op">&lt;-</span> <span class="fu">MetaEgress</span><span class="fu">::</span><span class="fu">get_meta</span><span class="op">(</span>dbname <span class="op">=</span> <span class="st">"ble_metabase"</span>,</span>
+<span>                                 dataset_ids <span class="op">=</span> <span class="fl">13</span>, </span>
+<span>                                 user <span class="op">=</span> <span class="st">"insert_or_enter_in_console"</span>, </span>
+<span>                                 password <span class="op">=</span> <span class="st">"insert_or_enter_in_console"</span><span class="op">)</span></span>
 <span><span class="va">metadata</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/append_units.html">append_units</a></span><span class="op">(</span><span class="va">metadata</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="renaming-attributes-to-match-metadata">Renaming attributes to match metadata<a class="anchor" aria-label="anchor" href="#renaming-attributes-to-match-metadata"></a>
 </h4>
-<p>Quick convenience function to rename all columns in a data.frame to what’s in the metadata. The usual assumptions apply: that there are as many columns in data as in metadata, and they are ordered the same way.</p>
+<p><code>rename_attributes</code> renames all columns in a data.frame to what’s in the metadata. The usual assumptions apply: that there are as many columns in data as in metadata, and they are ordered the same way.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/rename_attributes.html">rename_attributes</a></span><span class="op">(</span><span class="va">metadata</span>,</span>
-<span>                          dataset_id <span class="op">=</span> <span class="fl">13</span>,</span>
-<span>                          entity <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>                          x <span class="op">=</span> <span class="va">df</span>,</span>
-<span>                          append_units <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<span>                        dataset_id <span class="op">=</span> <span class="fl">13</span>,</span>
+<span>                        entity <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>                        x <span class="op">=</span> <span class="va">df</span>,</span>
+<span>                        append_units <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="exporting-personnel-from-metabase-to-csv">Exporting personnel from metabase to CSV<a class="anchor" aria-label="anchor" href="#exporting-personnel-from-metabase-to-csv"></a>
 </h4>
-<p>BLE’s Core Program datasets include a CSV to personnel with the years of data they were involved in. This information is stored in metabase and is specific to BLE. <code>MetaEgress::get_meta()</code> doesn’t query this information, so use:</p>
+<p>BLE’s Core Program datasets include a CSV of personnel with the years of data they were involved in. This information is stored in metabase and is specific to BLE. <code>MetaEgress::get_meta()</code> doesn’t query this information, so use:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/export_personnel.html">export_personnel</a></span><span class="op">(</span>dataset_ids <span class="op">=</span> <span class="fl">13</span>,</span>
 <span>                 file_name <span class="op">=</span> <span class="st">"BLE_LTER_chlorophyll_personnel.csv"</span><span class="op">)</span></span></code></pre></div>
