@@ -5,12 +5,19 @@
 \title{Add columns relevant to BLE LTER Core Program
 Add columns: station name, lat/lon, habitat type, given BLE LTER Core Program station code}
 \usage{
-add_cp_cols(df, station_code_col = "station")
+add_cp_cols(
+  df,
+  station_code_col = "station",
+ 
+    station_source = "https://utexas.box.com/shared/static/p6a8956afbsfh19422p8xhhtiqmf7eqy.csv"
+)
 }
 \arguments{
 \item{df}{(data.frame) Data frame in question with CP data}
 
 \item{station_code_col}{(character) Name of column containing BLE LTER station codes in supplied df. Defaults to "station".}
+
+\item{station_source}{(character) URL or file path to Core Program stations coordinates file. Defaults to https://utexas.box.com/shared/static/p6a8956afbsfh19422p8xhhtiqmf7eqy.csv.}
 }
 \value{
 Data with new station name, lat/lon, habitat type columns appended

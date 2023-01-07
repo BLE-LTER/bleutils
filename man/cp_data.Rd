@@ -3,7 +3,10 @@
 \docType{data}
 \name{cp_data}
 \alias{cp_data}
-\title{example of BLE LTER Core Program data with various formatting issues. use to test functions in this package}
+\title{#' BLE LTER Core Program, information on core sampling stations
+#'
+"stations"
+example of BLE LTER Core Program data with various formatting issues. use to test functions in this package}
 \format{
 An object of class \code{data.frame} with 104 rows and 7 columns.
 }
@@ -11,6 +14,9 @@ An object of class \code{data.frame} with 104 rows and 7 columns.
 cp_data
 }
 \description{
+#' BLE LTER Core Program, information on core sampling stations
+#'
+"stations"
 example of BLE LTER Core Program data with various formatting issues. use to test functions in this package
 }
 \keyword{datasets}
