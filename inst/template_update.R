@@ -41,7 +41,8 @@ url <- EDIutils::read_data_package(pkg_id)[[grab]]
 infile <- tempfile()
 try(download.file(url, infile, method = "curl"))
 prev_data <-
-  data.table::fread(infile, colClasses = list(character = c("date_time", "date_collected"))) # use prev_data from now on
+  data.table::fread(infile,
+                    colClasses = list(character = c("date_time"))) # make sure date times are read in as character as to not mess up our formatting
 
 # multiple data entities example
 # grab <- c(1, 2, 3) # entity or entities to get, change as needed
