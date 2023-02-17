@@ -1,6 +1,6 @@
 # bleutils
 
-October 25th 2022
+February 17th 2023
 
 ## Orientation
 
@@ -31,7 +31,7 @@ df <- cp_data
 df <- add_cp_cols(df, station_code_col = "station")
 ```
 
-Note that this function relies on the `stations` data.frame packaged with `bleutils`. The canon copy of this is kept on Box. To check if `bleutils` has the latest version, use `update_cp_stations` and point it to where Box is on your local machine. If the Box version differs from what `bleutils` has, this will update the package version. If this happens, make sure to push the change to GitHub and re-install `bleutils` wherever it is used.
+Note that this function relies on a table of station information. This is [kept on Box](https://utexas.app.box.com/file/1092468994724?s=sjt5phkdpyx9vsvpvcss461562vb5wsw) and a direct download link to it is fed under the argument "station_source" to the function. To generate a direct link to the Box file, go to its Shared Link Settings, and copy the URL under "Direct Link". You can also feed the function a local file path instead of a Box link.
 
 ```r
 update_cp_stations(source_file = "path_goes_here")
@@ -133,3 +133,5 @@ BLE's Core Program datasets include a CSV of personnel with the years of data th
 export_personnel(dataset_ids = 13,
                  file_name = "BLE_LTER_chlorophyll_personnel.csv")
 ```
+
+
