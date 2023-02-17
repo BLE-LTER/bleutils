@@ -2,7 +2,7 @@
 #' @description Add columns: station name, lat/lon, habitat type, given BLE LTER Core Program station code
 #'
 #' @param df (data.frame) Data frame in question with CP data
-#' @param station_source (character) URL or file path to Core Program stations coordinates file.
+#' @param station_source (character) URL or file path to Core Program stations coordinates file. I use Box's direct download feature to generate URLs for this. The source file lives at https://utexas.app.box.com/file/1092468994724?s=sjt5phkdpyx9vsvpvcss461562vb5wsw.
 #' @param station_code_col (character) Name of column containing BLE LTER station codes in supplied df. Defaults to "station".
 #'
 #' @return Data with new station name, lat/lon, habitat type columns appended
