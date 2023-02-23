@@ -37,7 +37,7 @@ correct_stations <-
       read.csv(corrections_source,
                colClasses = c("date" = "Date"))
     # merge based on dates and stations
-    df2 <-
+    df3 <-
       merge(
         df2,
         corrections,
@@ -46,10 +46,10 @@ correct_stations <-
         all.x = T
       )
     # if there's a correction station name, take that one otherwise leave alone
-    df2[["station"]] <-
-      ifelse(!is.na(df2[["new_station"]]),
-             df2[["new_station"]],
-             df2[["station"]])
-    df2 <- df2[, !colnames(df2) %in% c("new_station", date_col)]
-    return(df2)
+    df3[["station"]] <-
+      ifelse(!is.na(df3[["new_station"]]),
+             df3[["new_station"]],
+             df3[["station"]])
+    df3 <- df3[, !colnames(df3) %in% c("new_station", date_col)]
+    return(df3)
   }
