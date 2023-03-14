@@ -41,7 +41,9 @@ init_script <-
     } else {
       stop("type needs to be init or update")
     }
+    # sub in dataset id and data year into template
     template <- gsub("datasetid", dataset_id, template)
+    template <- gsub("datayear", data_year, template)
 
     script_name <-
       paste0("dataset", dataset_id, "_", format(Sys.Date(), "%Y%m"), ".R")
