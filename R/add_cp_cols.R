@@ -1,5 +1,5 @@
 #' Add columns relevant to BLE LTER Core Program
-#' @description Add columns: station name, lat/lon, habitat type, given BLE LTER Core Program station code
+#' @description Add columns: station name, lat/lon, habitat type, given BLE LTER Core Program station code. If there are unmatched station codes, a warning will be thrown but the rows will be preserved.
 #'
 #' @param df (data.frame) Data frame in question with CP data
 #' @param station_source (character) URL or file path to Core Program stations coordinates file. I use Box's direct download feature to generate URLs for this. The source file lives at https://utexas.app.box.com/file/1092468994724?s=sjt5phkdpyx9vsvpvcss461562vb5wsw.
