@@ -7,7 +7,7 @@
 infer_season(data, date_col = "date_time")
 }
 \arguments{
-\item{data}{data.frame A date.frame with date}
+\item{data}{data.frame A data.frame with date}
 
 \item{date_col}{character Name of column with dates or date-times. Please convert this column into a Date format first (not just strings containing dates).}
 }
@@ -15,5 +15,5 @@ infer_season(data, date_col = "date_time")
 A vector of strings: field campaign seasons in same order as dates or date-times supplied.
 }
 \description{
-Infer BLE LTER field campaign season from date or date-times: dates in May or earlier is under ice, June to 15th of July is break up, and 16th of July or later is open water. Do not use with mooring data.
+Infer BLE LTER field campaign season from date or date-times: dates in May or earlier are under ice, June to 15th of July is break up, and 16th of July or later is open water. Do not use with mooring data.
 }

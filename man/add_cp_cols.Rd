@@ -2,14 +2,13 @@
 % Please edit documentation in R/add_cp_cols.R
 \name{add_cp_cols}
 \alias{add_cp_cols}
-\title{Add columns relevant to BLE LTER Core Program
-Add columns: station name, lat/lon, habitat type, given BLE LTER Core Program station code}
+\title{Add columns relevant to BLE LTER Core Program}
 \usage{
 add_cp_cols(
   df,
   station_code_col = "station",
  
-    station_source = "https://utexas.box.com/shared/static/p6a8956afbsfh19422p8xhhtiqmf7eqy.csv"
+    station_source = "https://utexas.box.com/shared/static/sjt5phkdpyx9vsvpvcss461562vb5wsw.csv"
 )
 }
 \arguments{
@@ -17,12 +16,11 @@ add_cp_cols(
 
 \item{station_code_col}{(character) Name of column containing BLE LTER station codes in supplied df. Defaults to "station".}
 
-\item{station_source}{(character) URL or file path to Core Program stations coordinates file. Defaults to https://utexas.box.com/shared/static/p6a8956afbsfh19422p8xhhtiqmf7eqy.csv.}
+\item{station_source}{(character) URL or file path to Core Program stations coordinates file. I use Box's direct download feature to generate URLs for this. The source file lives at https://utexas.app.box.com/file/1092468994724?s=sjt5phkdpyx9vsvpvcss461562vb5wsw.}
 }
 \value{
 Data with new station name, lat/lon, habitat type columns appended
 }
 \description{
-Add columns relevant to BLE LTER Core Program
 Add columns: station name, lat/lon, habitat type, given BLE LTER Core Program station code
 }

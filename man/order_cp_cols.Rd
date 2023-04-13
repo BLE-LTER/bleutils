@@ -7,7 +7,7 @@
 order_cp_cols(data, type)
 }
 \arguments{
-\item{data}{(data.frame) A data.frame containing Core Program data. Columns names need to be named according to standard CP column names. Use bleutils::reaname_attributes for this to work.}
+\item{data}{(data.frame) A data.frame containing Core Program data. Columns names need to be named according to standard CP column names. Use bleutils::rename_attributes for this to work.}
 
 \item{type}{(character) Type of CP data. Choose from "water", "sediment", or "mooring". This affects the columns present.}
 }
