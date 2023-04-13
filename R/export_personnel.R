@@ -12,9 +12,7 @@
 #' @param write_to_file (logical) Whether to write to file. Defaults to TRUE.
 #' @param file_dir (character) Full path of directory to write file to. Defaults to current working directory.
 #' @param file_name (character) File name, will default to "BLE_LTER_(dataset_ids)_personnel.csv" if not specified.
-#'
 #' @return (data.frame) A data frame of personnel associated with specified dataset IDs as queried from metabase.
-#'
 #' @export
 
 export_personnel <-
@@ -30,7 +28,7 @@ export_personnel <-
            file_name = NULL)
   {
     driver <- RPostgres::Postgres()
-    con <- dbConnect(
+    con <- DBI::dbConnect(
       drv = driver,
       dbname = dbname,
       host = host,
@@ -52,7 +50,7 @@ export_personnel <-
     RPostgres::dbBind(result, list(dataset_ids))
     query_df <- RPostgres::dbFetch(result)
     RPostgres::dbClearResult(result)
-    dbDisconnect(con)
+   DBI::dbDisconnect(con)
 
     query_df[["datasetid"]] <-
       paste0("knb-lter-ble.", query_df[["datasetid"]])
