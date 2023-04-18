@@ -22,5 +22,5 @@ add_cp_cols(
 Data with new station name, lat/lon, habitat type columns appended
 }
 \description{
-Add columns: station name, lat/lon, habitat type, given BLE LTER Core Program station code
+Add columns: station name, lat/lon, habitat type, given BLE LTER Core Program station code. If there are unmatched station codes, a warning will be thrown but the rows will be preserved.
 }

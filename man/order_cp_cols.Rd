@@ -7,9 +7,9 @@
 order_cp_cols(data, type)
 }
 \arguments{
-\item{data}{(data.frame) A data.frame containing Core Program data. Columns names need to be named according to standard CP column names. Use bleutils::rename_attributes for this to work.}
+\item{data}{(data.frame) A data.frame containing Core Program data. Columns names need to be named according to standard CP column names. Use \code{bleutils::rename_attributes} prior to running this to rename columns to what's in metadata.}
 
-\item{type}{(character) Type of CP data. Choose from "water", "sediment", or "mooring". This affects the columns present.}
+\item{type}{(character) Type of CP data. Choose from "water", "sediment", or "mooring". Use "sediment" for biota data as well.}
 }
 \description{
 Order Core Program data columns in this particular order: node, lagoon, station, season, date_time, water_column_position, (insert data columns), station_name, latitude, longitude, habitat_type, station_sampling_priority.
