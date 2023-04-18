@@ -92,3 +92,7 @@ tryCatch({
 error = function(e) {
   stop(e)
 })
+
+# insert additionalMetadata snippet for replication to ADC
+# to the EML document we just created
+insert_additional_metadata(file = file.path(datayear, paste0("EML_", datasetid, "_", Sys.Date(), ".xml")))
