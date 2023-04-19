@@ -19,7 +19,7 @@ export_personnel <-
   function(dbname = "ble_metabase",
            schema = "pkg_mgmt",
            dataset_ids,
-           host = "localhost",
+           host = '10.157.18.83',
            port = 5432,
            user = NULL,
            password = NULL,
