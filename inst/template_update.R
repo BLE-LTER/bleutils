@@ -87,7 +87,7 @@ tryCatch({
   if (eml_validate(eml_datasetid))
     # if above validation returns TRUE, then serialize to XML file
     write_eml(eml_datasetid,
-              file = file.path(datayear, paste0("EML_", datasetid, "_", Sys.Date(), ".xml")))
+              file = file.path(as.character(datayear), paste0("EML_", datasetid, "_", Sys.Date(), ".xml")))
 },
 error = function(e) {
   stop(e)
@@ -95,4 +95,4 @@ error = function(e) {
 
 # insert additionalMetadata snippet for replication to ADC
 # to the EML document we just created
-insert_additional_metadata(file = file.path(datayear, paste0("EML_", datasetid, "_", Sys.Date(), ".xml")))
+insert_additional_metadata(file = file.path(as.character(datayear), paste0("EML_", datasetid, "_", Sys.Date(), ".xml")))
