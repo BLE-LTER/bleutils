@@ -1,15 +1,16 @@
 Package: bleutils
 Type: Package
 Title: Utility functions for BLE LTER IM team
-Version: 0.1.0
-Authors@R: person("An T.", "Nguyen", email = "enthusiast@utexas.edu", role = c("aut", "cre"))
+Version: 0.1.1
+Authors@R: c(
+  person("An T.", "Nguyen", email = "enthusiast@utexas.edu", role = c("aut", "cre")),
+  person("Tim", "Whiteaker", email = "whiteaker@utexas.edu", role = "aut"))
 Description: Utility functions for BLE LTER IM team
 License: CC BY 4.0
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.2
-Depends: 
-    R (>= 2.10)
+Depends: R (>= 2.10)
 Imports: 
     RPostgres,
     DBI,
