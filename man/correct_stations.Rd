@@ -7,8 +7,8 @@
 correct_stations(
   df,
   station_code_col = "station",
- 
-    corrections_source = "https://utexas.box.com/shared/static/1uy9n875jtc7djxlckm0ogv6v3mwes6f.csv"
+  corrections_source =
+    "https://utexas.box.com/shared/static/1uy9n875jtc7djxlckm0ogv6v3mwes6f.csv"
 )
 }
 \arguments{
@@ -19,7 +19,7 @@ correct_stations(
 \item{corrections_source}{(character) URL to corrections CSV file. I use a shared Box file for this. The source file is at https://utexas.app.box.com/file/1135058499563?s=1uy9n875jtc7djxlckm0ogv6v3mwes6f.}
 }
 \value{
-
+(data.frame) A data frame with stations corrected.
 }
 \description{
 The need for this function arose when in 2023 it was determined that in the past some stations were not labelled correctly during break-up season (june/july). Due to ice conditions, on certain dates sampling was done not at the station (within 100m of waypoint coordinates). This function takes a csv of corrections of dates, old and new station codes, and convert the old codes to new only on these dates. Note that this removes the station information columns (coordinates, etc) and one can add it back with add_cp_cols.

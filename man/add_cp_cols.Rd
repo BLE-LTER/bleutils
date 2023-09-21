@@ -7,8 +7,8 @@
 add_cp_cols(
   df,
   station_code_col = "station",
- 
-    station_source = "https://utexas.box.com/shared/static/sjt5phkdpyx9vsvpvcss461562vb5wsw.csv"
+  station_source =
+    "https://utexas.box.com/shared/static/sjt5phkdpyx9vsvpvcss461562vb5wsw.csv"
 )
 }
 \arguments{

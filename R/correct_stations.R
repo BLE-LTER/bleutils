@@ -4,7 +4,7 @@
 #' @param station_code_col (character) Name of column containing station codes
 #' @param corrections_source (character) URL to corrections CSV file. I use a shared Box file for this. The source file is at https://utexas.app.box.com/file/1135058499563?s=1uy9n875jtc7djxlckm0ogv6v3mwes6f.
 #'
-#' @return
+#' @return (data.frame) A data frame with stations corrected.
 #' @export
 #'
 correct_stations <-

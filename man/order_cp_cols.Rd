@@ -12,5 +12,5 @@ order_cp_cols(data, type)
 \item{type}{(character) Type of CP data. Choose from "water", "sediment", or "mooring". Use "sediment" for biota data as well.}
 }
 \description{
-Order Core Program data columns in this particular order: node, lagoon, station, season, date_time, water_column_position, (insert data columns), station_name, latitude, longitude, habitat_type, station_sampling_priority.
+Order Core Program data columns in this particular order: node, lagoon, station, season, date_time, water_column_position, (insert data columns), station_name, latitude, longitude, station_depth, habitat_type, station_sampling_priority.
 }
