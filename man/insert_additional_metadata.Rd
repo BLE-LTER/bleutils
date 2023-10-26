@@ -9,7 +9,7 @@ insert_additional_metadata(file, pattern = NULL, addition = NULL, after)
 \arguments{
 \item{file}{(character) Path to EML file. Function will also write to this same file.}
 
-\item{pattern}{(character) Grep pattern. \code{grep()} will be called on the contents of the file, and the first match will be used. Defaults to "<\dataset>".}
+\item{pattern}{(character) Grep pattern. \code{grep()} will be called on the contents of the file, and the first match will be used. Defaults to "</dataset>".}
 
 \item{addition}{(character) Plain text of EML snippet to insert. Defaults to an "additionalMetadata" node pertaining to replication I won't paste here.}
 
