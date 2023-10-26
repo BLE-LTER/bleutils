@@ -1,7 +1,7 @@
 Package: bleutils
 Type: Package
 Title: Utility functions for BLE LTER IM team
-Version: 0.1.1
+Version: 0.1.2
 Authors@R: c(
   person("An T.", "Nguyen", email = "enthusiast@utexas.edu", role = c("aut", "cre")),
   person("Tim", "Whiteaker", email = "whiteaker@utexas.edu", role = "aut"))
