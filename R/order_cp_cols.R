@@ -1,5 +1,5 @@
 #' @title Order Core Program data columns
-#' @description Order Core Program data columns in this particular order: node, lagoon, station, season, date_time, water_column_position, (insert data columns), station_name, latitude, longitude, station_depth, habitat_type, station_sampling_priority.
+#' @description Order Core Program data columns in this particular order: node, lagoon, station, season, date_time, water_column_position, (insert data columns), station_name, latitude, longitude, station_depth, habitat_type, station_sampling_priority. Note that station_depth is optional.
 #' @param data (data.frame) A data.frame containing Core Program data. Columns names need to be named according to standard CP column names. Use \code{bleutils::rename_attributes} prior to running this to rename columns to what's in metadata.
 #' @param type (character) Type of CP data. Choose from "water", "sediment", or "mooring". Use "sediment" for biota data as well.
 #'
@@ -17,7 +17,7 @@ order_cp_cols <- function(data, type){
     "station_name",
     "latitude",
     "longitude",
-    if (type == "water") "station_depth",
+    if (type == "water" && "station_depth" %in% colnames(data)) "station_depth",
     "habitat_type",
     "station_sampling_priority")
 
