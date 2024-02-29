@@ -18,6 +18,7 @@ order_cp_cols <- function(data, type){
     "latitude",
     "longitude",
     if (type == "water" && "station_depth" %in% colnames(data)) "station_depth",
+    if (type == "water" && "station_depth_m" %in% colnames(data)) "station_depth_m",
     "habitat_type",
     "station_sampling_priority")
 
