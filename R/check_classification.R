@@ -26,15 +26,15 @@ check_classification <- function(input_dataframe) {
   
   # Extract aphia_ids from the dataframe
   aphia_ids <- input_dataframe$aphia_ID
-  unique_aphia_ids <- unique(input_dataframe$aphia_ID)
+  
   # Initialize an empty list to store mismatches
   mismatches <- list()
   
   # Iterate through each AphiaID
-  for (aphia_id in unique_aphia_ids) {
+  for (aphia_id in aphia_ids) {
     # Fetch classification from WoRMS
     worms_classification <- fetch_classification_from_worms(aphia_id)
-    #print(aphia_id)
+    
     # Get the corresponding row from the input dataframe
     csv_row <- input_dataframe[input_dataframe$aphia_ID == aphia_id, ]
     
@@ -50,14 +50,10 @@ check_classification <- function(input_dataframe) {
       if (level == "Species") next
       
       csv_value <- as.character(csv_row[[tolower(level)]])
-      if(length(csv_value) > 1) {
-
-        csv_value <- csv_value[1]
-      }
       worms_value <- as.character(worms_classification[[level]])
-      if(length(csv_value) > 1 || length(worms_value) > 1) next
+      
       # Skip NA values
-      if (is.na(csv_value) || (is.null(worms_value))) next
+      if (is.na(csv_value) || is.na(worms_value)) next
       
       if (length(csv_value) == 1 && length(worms_value) == 1 && tolower(csv_value) != tolower(worms_value)) {
         mismatch[[level]] <- list(CSV = csv_value, WoRMS = worms_value)
