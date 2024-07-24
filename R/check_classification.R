@@ -22,7 +22,23 @@ fetch_classification_from_worms <- function(aphia_id) {
     Order = json_data$order,
     Family = json_data$family,
     Genus = json_data$genus,
-    Species = json_data$scientificname  #TODO: Incorrect if level isn't species. Test with aphia_id 923 (family). For species, you should check if json_data$rank == "Species", and then you can get the scientific name. Otherwise Species should be null. However, if the aphia_ID is a subspecies, I don't know how to get the species (example: 410749). Hmm, for subspecies, I think you'll have to get json_data$parentNameUsageID and then call the function again with that ID to hopefully get the species (check the rank to see if it's species).
+    #Incorrect if level isn't species. Test with aphia_id 923 (family). For species, you should check if json_data$rank == "Species", and then you can get the scientific name. Otherwise Species should be null. However, 
+    #if the aphia_ID is a subspecies, I don't know how to get the species (example: 410749). Hmm, for subspecies, I think you'll have to get json_data$parentNameUsageID and then call the function again with that ID to hopefully get the species (check the rank to see if it's species).
+    Species <- ifelse(json_data$rank == "Species",
+                  json_data$scientificname,
+                  ifelse(json_data$rank == "Subspecies" && !is.null(json_data$parentNameUsageID) && json_data$parentNameUsageID != "",
+                         {
+                          parent <- fetch_classification_from_worms(json_data$parentNameUsageID)
+                          species <- parent[['Species']]
+                          if (!is.null(species) && !is.na(species) && species != "") {
+                            species
+                          } else {
+                             NA  # Return NA if parent data is null or missing scientific name
+                          }
+                         },
+                         NA))
+
+    #taxa_id = json_data$scientificname
   )
   
   return(classification)
@@ -33,7 +49,8 @@ fetch_classification_from_worms <- function(aphia_id) {
 #' Mismatches are collected and printed. If no dataframe is provided or the input is not a dataframe, the function will stop with an error.
 #' @param input_dataframe A dataframe with at least one column named `aphia_ID` and other columns corresponding to taxonomic levels (kingdom, phylum, class, order, family, genus, species). Taxa levels columns must be lower case.
 #' @return Returns a list of mismatches, where each mismatch is a list containing the AphiaID and the discrepancies between the dataframe and the WoRMS data. Each mismatch specifies the dataframe value and the WoRMS value for each differing taxonomic level.
-
+#' @import httr jsonlite
+#' @export
 check_classification <- function(input_dataframe) {
   library(httr)
   library(jsonlite)
@@ -89,34 +106,31 @@ check_classification <- function(input_dataframe) {
       mismatch <- list(discrepancies = list(), excel_row = row_number)
       
       for (level in names(worms_classification)) {
-        #print (level)
-        #TODO: Have you tested whether the if statement below actually catches when the WoRMS result was null, like for aphia_id 923 and genus?
-        if (!is.null(worms_classification[[level]]) && worms_classification[[level]] != "") {
-          csv_value <- as.character(csv_rows[row_index, tolower(level)])
+        csv_value <- as.character(csv_rows[row_index, tolower(level)])
+       if (!is.null(worms_classification[[level]]) && !is.na(worms_classification[[level]]) && worms_classification[[level]] != "") {
           worms_value <- as.character(worms_classification[[level]])    
-          if((is.na(csv_value)) || (is.na(worms_value))) {
-            #TODO: We shouldn't go to next. Presumably the WoRMS value would not be NA since you check that above. So if the CSV value is NA, we should add it to the mismatches.
-            next
-          }
           if(level == "Species") {
             csv_value <- paste(as.character(csv_rows[row_index, "genus"]), csv_value)
           }
-          
-          #TODO: No need to convert tolower. Case should already match exactly. If not, then that is a mismatch.
-          if (tolower(csv_value) != tolower(worms_value)) {
-             #cat ("worms", worms_value, "\n")
-             #cat ("excel", csv_value, "\n")
+          if (csv_value != worms_value) {
             mismatch$discrepancies[[level]] <- list(CSV = csv_value, WoRMS = worms_value)
           }
-        }
-        else {
-          #TODO: If we got here, then the WoRMS classification was null. If the CSV isn't NA, then we should add it to the mismatches.
-        }
+        } else {
+          csv_column_name <- tolower(level)
+          if (csv_column_name %in% names(csv_rows)) {
+            csv_value <- as.character(csv_rows[row_index, csv_column_name])
+
+          #If we got here, then the WoRMS classification was null. If the CSV isn't NA, then we should add it to the mismatches.
+          if (!is.na(csv_value) && csv_value != "") {
+            mismatch$discrepancies[[level]] <- list(CSV = csv_value, WoRMS = "NA")
+          }
+        } 
       }
-      
-      if (length(mismatch$discrepancies) > 0) {
-        mismatches[[as.character(aphia_id)]] <- c(mismatches[[as.character(aphia_id)]], list(mismatch))
-      }
+}
+
+if (length(mismatch$discrepancies) > 0) {
+  mismatches[[as.character(aphia_id)]] <- c(mismatches[[as.character(aphia_id)]], list(mismatch))
+}
     }
     
     Sys.sleep(0.5)
