@@ -2,6 +2,7 @@
 
 export(add_cp_cols)
 export(append_units)
+export(check_classification)
 export(correct_stations)
 export(export_personnel)
 export(infer_season)

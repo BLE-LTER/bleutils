@@ -141,3 +141,13 @@ During ice break-up, sometimes the field team cannot reach the actual station co
 ```r
 df <- correct_stations(df)
 ```
+
+#### Check taxonomic hierarchy
+
+For data with taxa, CSVs usually include a WoRMS aphia_id and the basic taxonomic hierarchy. What's in WoRMS changes over time, frequently. The `check_classification` function compares the hierachy in the CSV with what's in WoRMS for each aphia_id. Mismatches are printed to the console and saved to a file. 
+
+```r
+input_dataframe <- ... # load your data table CSV into a data frame here
+file_path <- "c:\data\check_taxa_results.txt"
+check_classification(input_dataframe, file_path)
+```

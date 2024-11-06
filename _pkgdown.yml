@@ -18,6 +18,7 @@ reference:
   - init_datapkg
   - init_script
   - append_units
+  - check_classification
   - rename_attributes
   - export_personnel
 - title: "Datasets included with the package"
