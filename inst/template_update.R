@@ -17,7 +17,7 @@ library(dplyr)
 metadata <- append_units(get_meta(
   dbname = "ble_metabase",
   dataset_ids = datasetid,
-  host = '10.157.18.83'
+  host = '10.157.18.158'
 ))
 
 # Establish data folders
@@ -71,7 +71,7 @@ prev_data <-
 metadata <- append_units(get_meta(
   dbname = "ble_metabase",
   dataset_ids = datasetid,
-  host = '10.157.18.83'
+  host = '10.157.18.158'
 ))
 
 # create entities in emld list structure

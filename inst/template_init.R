@@ -16,7 +16,7 @@ library(dplyr)
 # type in username and password in the R console
 metadata <- append_units(get_meta(dbname = "ble_metabase",
                      dataset_ids = datasetid,
-                     host = '10.157.18.83'))
+                     host = '10.157.18.158'))
 
 # Read in data from folder
 frompi <- file.path(getwd(), "..", "FromPI")
@@ -35,7 +35,7 @@ clean <- file.path(getwd(), "..", "Clean")
 # type in username and password in the R console
 metadata <- append_units(get_meta(dbname = "ble_metabase",
                      dataset_ids = datasetid,
-                     host = '10.157.18.83'))
+                     host = '10.157.18.158'))
 
 # create entities in emld list structure
 entities_datasetid <- create_entity_all(metadata,
