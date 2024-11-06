@@ -22,7 +22,7 @@ fetch_classification_from_worms <- function(aphia_id) {
     return(NULL)  # Return NULL on error
   })
   if (is.null(json_data)) {
-  return(NULL)
+    return(NULL)
   }
   
   classification <- list(
@@ -56,10 +56,11 @@ fetch_classification_from_worms <- function(aphia_id) {
 #' This function verifies the taxonomic classification of rows in a dataframe against data from the WoRMS API based on AphiaID. It iterates over each unique AphiaID in the dataframe, fetches the corresponding classification from WoRMS, and compares it against the dataframe values. 
 #' Mismatches are collected and printed. If no dataframe is provided or the input is not a dataframe, the function will stop with an error.
 #' @param input_dataframe A dataframe with at least one column named `aphia_ID` and other columns corresponding to taxonomic levels (kingdom, phylum, class, order, family, genus, species). Taxa levels columns must be lower case.
+#' @param file_path A character string representing the file path where the output will be saved, e.g., "C:/Users/YourName/Documents/output.txt".
 #' @return Returns a list of mismatches, where each mismatch is a list containing the AphiaID and the discrepancies between the dataframe and the WoRMS data. Each mismatch specifies the dataframe value and the WoRMS value for each differing taxonomic level.
 #' @import httr jsonlite
 #' @export
-check_classification <- function(input_dataframe) {
+check_classification <- function(input_dataframe, file_path) {
   library(httr)
   library(jsonlite)
   
@@ -68,14 +69,9 @@ check_classification <- function(input_dataframe) {
   }
   
   # Open a connection to a text file where output will be written
-  #sink("C:/Users/im23237/Documents/taxanew.txt")
-  file_path <- readline(prompt = "Please enter the file path to save the output (e.g., C:/Users/YourName/Documents/output.txt): ")
-    
-    # Check if the user provided a file path
-    if (file_path == "") {
-      stop("No file path provided. Please enter a valid file path.")
-    }
-  
+  if (file_path == "") {
+    stop("No file path provided. Please provide a valid file path.")
+  } 
   sink(file_path)
   
   # Function to print mismatches
@@ -87,18 +83,16 @@ check_classification <- function(input_dataframe) {
         mismatch <- mismatches[[aphia_id]]
 
         flag <- 0
-       
-        
+
         cat("Mismatches for AphiaID", aphia_id,  ":\n")
         cat("   scientific name ", mismatch$gs, mismatch$ss, "\n")
         cat("     Example Excel Row", mismatch$excel_row, ":\n")
         
         for (level in names(mismatch$discrepancies)) {
           if(flag == 0 ){
-      
-        flag <- flag + 1
-        }
-                  cat("    ", level, ":\n")
+            flag <- flag + 1
+          }
+          cat("    ", level, ":\n")
           cat("      CSV:   ", mismatch$discrepancies[[level]]$CSV, "\n")
           cat("      WoRMS: ", mismatch$discrepancies[[level]]$WoRMS, "\n")
         }
@@ -129,16 +123,14 @@ check_classification <- function(input_dataframe) {
     }
     
     csv_rows <- input_dataframe[input_dataframe$aphia_ID == aphia_id, ]
-    unique_mismatch_found <- FALSE
     
     for (row_index in seq_along(csv_rows[, 1])) {
       row_number <- which(input_dataframe$aphia_ID == aphia_id)[1] + 1  # Assuming header in row 1
       
-       genus_value = as.character(csv_rows[row_index, "genus"])
-          
-            species_value = as.character(csv_rows[row_index, "species"])
+      genus_value = as.character(csv_rows[row_index, "genus"])
+      species_value = as.character(csv_rows[row_index, "species"])
       mismatch <- list(discrepancies = list(), excel_row = row_number,gs = genus_value, ss = species_value)
-      
+
       for (level in names(worms_classification)) {
         csv_value <- as.character(csv_rows[row_index, tolower(level)])
         if (!is.null(worms_classification[[level]]) && !is.na(worms_classification[[level]]) && worms_classification[[level]] != "") {
@@ -146,10 +138,8 @@ check_classification <- function(input_dataframe) {
           if (level == "Species") {
             csv_value <- paste(as.character(csv_rows[row_index, "genus"]), csv_value)
           }
-          if (!is.na(csv_value) && !is.na(worms_value) && csv_value != worms_value) {
-            
+          if (!is.na(csv_value) && !is.na(worms_value) && csv_value != worms_value) {            
             mismatch$discrepancies[[level]] <- list(CSV = csv_value, WoRMS = worms_value)
-       
           }
         } else {
           csv_column_name <- tolower(level)
@@ -161,23 +151,18 @@ check_classification <- function(input_dataframe) {
               next
             }
                              
-             # If we got here, then the WoRMS classification was null. If the CSV isn't NA, then we should add it to the mismatches.
+            # If we got here, then the WoRMS classification was null. If the CSV isn't NA, then we should add it to the mismatches.
             if (!is.na(csv_value) && csv_value != "") {
               genus_value = as.character(csv_rows[row_index, "genus"])
-          
-            species_value = as.character(csv_rows[row_index, "species"])
+              species_value = as.character(csv_rows[row_index, "species"])
               mismatch$discrepancies[[level]] <- list(CSV = csv_value, WoRMS = "NA", genus = genus_value, species = species_value)
-              
+ 
             }
             # If we got here, then the WoRMS classification has value. If the CSV is NA, then we should add it to the mismatches.
             if (is.na(csv_value) || csv_value == "") {
               genus_value = as.character(csv_rows[row_index, "genus"])
-          
-            species_value = as.character(csv_rows[row_index, "species"])
+              species_value = as.character(csv_rows[row_index, "species"])
               mismatch$discrepancies[[level]] <- list(CSV = "NA", WoRMS = worms_classification[[level]],genus = genus_value, species = species_value)
-              
-          
-            
             }
           }
         }
@@ -185,7 +170,6 @@ check_classification <- function(input_dataframe) {
 
       if (length(mismatch$discrepancies) > 0) {
         mismatches[[as.character(aphia_id)]] <- mismatch
-        unique_mismatch_found <- TRUE
         break
       }
     }
@@ -196,6 +180,6 @@ check_classification <- function(input_dataframe) {
   print_mismatches(mismatches)
   sink()
   
-    cat("Output saved to:", file_path, "\n")
+  cat("Output saved to:", file_path, "\n")
   return(mismatches)
 }
