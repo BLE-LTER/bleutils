@@ -1,104 +1,88 @@
 # Load necessary libraries
 library(httr)
+library(jsonlite)
 library(xml2)
 library(dplyr)
+library(tidyr)
 library(EDIutils)
 
-# Define function to fetch all package IDs dynamically from EDI using search_data_packages
-fetch_all_edi_package_ids <- function(query) {
-  # Use EDIutils function to search EDI for packages based on query
-  #edi_packages <- search_data_packages(query)  # Updated to use search_data_packages() function
-  
-  edi_packages <- search_data_packages("q=keyword:BLE&fl=id")
-  print(edi_packages)
-  if (nrow(edi_packages) == 0) {
-    stop("No valid package IDs retrieved from EDI.")
-  }
-  
-  # Extract package IDs from the returned data
-  ids <- edi_packages$packageId
-  
-  return(ids)
+# Function to query EDI for BLE data packages
+query_edi <- function() {
+  edi_packages <- search_data_packages("fq=scope:knb-lter-ble&q=*&fl=doi,packageid")
+  # Extract the revision number
+  edi_packages$revision <- as.numeric(sapply(strsplit(edi_packages$packageid, "\\."), tail, 1))
+  # Reformat DOI column to be a URL
+  edi_packages$doi <- gsub("doi:", "https://doi.org/", edi_packages$doi)
+  return(edi_packages)
 }
 
-# Define function to fetch metadata for a specific package ID from ADC using rsolr
-fetch_adc_metadata <- function(package_id, token) {
-  adc_base_url <- "https://arcticdata.io/metacat/d1/mn/v2/query/solr"
-  
-  # Extract scope and identifier from package ID (ensure correct format)
-  components <- unlist(strsplit(package_id, "\\."))
-  if (length(components) < 2) {
-    stop("Invalid package ID format. Expected format: <scope>.<identifier>.<revision>")
-  }
-  query_id <- paste(components[1:2], collapse = ".")
-  
-  # Construct query URL for ADC
-  query_url <- paste0(adc_base_url, "?q=id:", query_id, "&fl=revision")
-  
-  # Fetch metadata from ADC
-  response <- GET(query_url, add_headers(Authorization = paste("Bearer", token)))
-  
-  if (response$status_code != 200) {
-    stop("Failed to query ADC for package ID: ", package_id)
-  }
-  
-  # Parse XML response and extract revision
-  xml_content <- content(response, "text", encoding = "UTF-8")
-  xml_parsed <- read_xml(xml_content)
-  revisions <- xml_find_first(xml_parsed, ".//revision") %>% xml_text() %>% as.numeric()
-  
-  if (is.na(revisions)) {
-    message("No metadata found in ADC for package ID: ", package_id)
-    return(NA)
-  }
-  
-  return(revisions)
-}
-
-# Function to compare revisions between EDI and ADC
-compare_revisions <- function(package_id, token) {
-  # Fetch EDI revision using EDIutils function
-  edi_metadata <- edi_get_metadata(package_id)
-  edi_revision <- as.numeric(edi_metadata$revision)
-  
-  # Fetch ADC revision using custom function
-  adc_revision <- fetch_adc_metadata(package_id, token)
-  
-  # Compare revisions and generate result
-  if (is.na(adc_revision)) {
-    result <- paste("Package ID:", package_id, "| Status: Missing in ADC | EDI Link: https://pasta.lternet.edu/package/metadata/eml/", package_id)
-  } else if (adc_revision < edi_revision) {
-    result <- paste("Package ID:", package_id, "| EDI Revision:", edi_revision, "| ADC Revision:", adc_revision, "| Status: Outdated in ADC | EDI Link: https://pasta.lternet.edu/package/metadata/eml/", package_id)
+# Function to query ADC for BLE data packages
+query_adc <- function(token) {
+  adc_url <- "https://arcticdata.io/metacat/d1/mn/v2/query/solr/"
+  response <- GET(
+    url = adc_url,
+    query = list(
+      q = "scope:knb-lter-ble",
+      fl = "identifier,title,revision",
+      rows = 1000,
+      wt = "xml"
+    ),
+    add_headers(Authorization = paste("Bearer", token))
+  )
+  if (status_code(response) == 200) {
+    adc_packages <- fromJSON(content(response, as = "text"))$response$docs
+    return(adc_packages)
   } else {
-    result <- paste("Package ID:", package_id, "| EDI Revision:", edi_revision, "| ADC Revision:", adc_revision, "| Status: Up-to-date")
+    stop("Failed to query ADC catalog. Check your token and network connection.")
   }
+}
+
+# Compare EDI and ADC packages and generate email text
+compare_and_generate_email <- function(edi_packages, adc_packages) {
+  # Convert ADC to a data frame and extract relevant fields
+  adc_packages <- data.frame(
+    seriesId = sapply(adc_packages$seriesId, function(x) ifelse(is.null(x), NA, x)),
+    revision = as.numeric(adc_packages$revision),
+    stringsAsFactors = FALSE
+  )
   
-  return(result)
+  # Merge EDI and ADC data
+  merged_data <- full_join(
+    edi_packages %>% rename(edi_revision = revision),
+    adc_packages %>% rename(adc_revision = revision),
+    by = c("seriesId" = "seriesId")
+  )
+  
+  # Identify missing or outdated packages
+  missing_or_outdated <- merged_data %>%
+    filter(is.na(adc_revision) | edi_revision > adc_revision)
+  
+  # Generate email text for missing or outdated packages
+  email_text <- missing_or_outdated %>%
+    mutate(
+      email_line = ifelse(
+        is.na(adc_revision),
+        paste("The following package is missing in ADC:", doi),
+        paste("The following package in ADC needs an update:", doi, "(current ADC revision:", adc_revision, "latest EDI revision:", edi_revision, ")")
+      )
+    ) %>%
+    pull(email_line) %>%
+    paste(collapse = "\n")
+  
+  return(email_text)
 }
 
 # Main script
-# Define token and EDI query
-adc_token <-"eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJodHRwOlwvXC9vcmNpZC5vcmdcLzAwMDktMDAwMi04NDc1LTIyOTUiLCJmdWxsTmFtZSI6IkluZHVqYSBNb2hhbmRhcyIsImlzc3VlZEF0IjoiMjAyNC0xMi0wNFQxOToyMzo1NC44MzUrMDA6MDAiLCJjb25zdW1lcktleSI6InRoZWNvbnN1bWVya2V5IiwiZXhwIjoxNzMzNDA1MDM0LCJ1c2VySWQiOiJodHRwOlwvXC9vcmNpZC5vcmdcLzAwMDktMDAwMi04NDc1LTIyOTUiLCJ0dGwiOjY0ODAwLCJpYXQiOjE3MzMzNDAyMzR9.pNXjSMVxsBdxpZbixkcqcC8XNxUvIgLzRfozN1OTsQAgt_pegq54Zhx3T9F_DeeFOu1C-gxhhxzCuyjpSsZ_HJ4elAmnRi2x-ciUdhxTjEfLf8CQvbROMWt3EqoPqmY9AckZ74K-LZLr_i6R2p6h4hCHlFBe102WZKFkDK90g5P53ZlvO6DNrB18uOfNdY6vrMxodFm9RFY1eLCDKcdT9xP6oTkAA15FU_Ga90CUw_jfGXVNWy45iR4LInC9HdeCPf02Bs4rO-xfdRFZ9ZZOoIWgbZViSx9x0nZCyt14LiszbfR6Z42Zb2Tb6fpc5aJvyIUc0D7HioWUe5uiIsnJhQ"
-edi_query <- 'q=keyword:BLE&fl=id'
+token <- "eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJodHRwOlwvXC9vcmNpZC5vcmdcLzAwMDktMDAwMi04NDc1LTIyOTUiLCJmdWxsTmFtZSI6IkluZHVqYSBNb2hhbmRhcyIsImlzc3VlZEF0IjoiMjAyNC0xMi0wNVQxNzowODo1My44NjUrMDA6MDAiLCJjb25zdW1lcktleSI6InRoZWNvbnN1bWVya2V5IiwiZXhwIjoxNzMzNDgzMzMzLCJ1c2VySWQiOiJodHRwOlwvXC9vcmNpZC5vcmdcLzAwMDktMDAwMi04NDc1LTIyOTUiLCJ0dGwiOjY0ODAwLCJpYXQiOjE3MzM0MTg1MzN9.0CkJ_TY8greSBMBxy8kxB3iFRRMgQ35TZwFyyYQNy9rzh3gv9M98S42LZFuZ9q2fey1B4DWQ4K2Ti0Q2C6BCCSxG54GM_JpqWJGjDVIjwA4HpqwauM7M8RqSw6ItF2yw-a5AC956oBUJ9uG6jvTYhI-G5q4M96pfuMS2U5YFfPpaMWiFPjrxPJigCIvCJ2E5Y1ooIaFt63sO_yr_6CvGchgBk_ueHwtOINM7BQv0laad18zNcqMOGUCGwiXg3lXbyeOc1tB-jbFAdWyih7HgOtPUpOPRvstmSda3_OPHRCGqr7_zZQqBeg1tJyAXwWXw2P1SE_dcNyiiIbFyhYP1xA"
+edi_packages <- query_edi()
+adc_packages <- query_adc(token)
 
-# Fetch all package IDs dynamically from EDI using EDIutils
-package_ids <- fetch_all_edi_package_ids(edi_query)$id
-print(package_ids)
+# Generate email text
+email_text <- compare_and_generate_email(edi_packages, adc_packages)
 
-# Compare revisions for each package ID
-results <- sapply(package_ids, compare_revisions, token = adc_token)
-print(results)
+# Save email text to a file
+output_file <- "Data/utils/ADC_replication/email_text.txt"
+dir.create(dirname(output_file), recursive = TRUE, showWarnings = FALSE)
+writeLines(email_text, con = output_file)
 
-# Filter and prepare results that need harvesting from ADC
-harvest_needed <- results[grep("Status: Missing in ADC|Status: Outdated in ADC", results)]
-
-# Create email text with links to EDI packages needing harvesting
-email_text <- paste("Dear ADC team,\n\nThe following EDI packages are missing or outdated in the ADC catalog and require harvesting:\n\n", 
-                    paste(harvest_needed, collapse = "\n"), 
-                    "\n\nPlease let us know once the harvesting is complete. Thank you.\n\nBest regards,\nInduja")
-
-# Save the results to a text file
-writeLines(email_text, "C:/Users/im23237/Documents/email_text.txt")
-
-# Print the email text
-cat(email_text)
+cat("Email text generated and saved to:", output_file)
