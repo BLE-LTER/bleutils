@@ -21,6 +21,7 @@ reference:
   - check_classification
   - rename_attributes
   - export_personnel
+  - compare_adc_to_edi
 - title: "Datasets included with the package"
   contents:
   - cp_data

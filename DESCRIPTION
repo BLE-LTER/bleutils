@@ -1,7 +1,7 @@
 Package: bleutils
 Type: Package
 Title: Utility functions for BLE LTER IM team
-Version: 0.1.4
+Version: 0.2.0
 Authors@R: c(
   person("An T.", "Nguyen", email = "enthusiast@utexas.edu", role = c("aut", "cre")),
   person("Tim", "Whiteaker", email = "whiteaker@utexas.edu", role = "aut"),
@@ -16,9 +16,12 @@ Imports:
     RPostgres,
     DBI,
     EDIutils,
+    httr
     lubridate,
-    dplyr,
+    jsonlite,
+    dataone,
     data.table,
+    dplyr,
     readxl,
     stringr,
     usethis
