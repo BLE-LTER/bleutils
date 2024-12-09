@@ -2,17 +2,17 @@
 #' This function compares user-provided input data with an official record of station data.
 #' It verifies alignment of date_time, station, year, and season data between the two datasets.
 #' When mismatches are found, it attempts to correct them where possible and reports the results.
-#' @param input_data A data frame containing the user-provided data with columns: `station`, `date_time`, `year_date_time`, and `season_date_time`.
-#' @param official_record A data frame containing the official record data with columns: `station`, `date_time`, `year_date_time`, and `season_date_time`.
+#' @param input_data A data frame containing the user-provided data with columns: station, date_time, year_date_time, and season_date_time.
+#' @param official_record A data frame containing the official record data with columns: station, date_time, year_date_time, and season_date_time.
 #' @return A data frame with columns:
-#' - `station`: The station identifier.
-#' - `season_date_time`: The season identifier.
-#' - `original_date_time`: The original date and time from the input data.
-#' - `date_time_changed`: The date and time after attempting corrections.
-#' - `expected_date_time`: The expected date and time from the official record.
-#' - `year_date_time`: The year identifier.
-#' - `match_status`: A status message describing the match results.
-#' - `result`: A boolean indicating whether the final date and time matches the expected date and time.
+#' - station: The station identifier.
+#' - season_date_time: The season identifier.
+#' - original_date_time: The original date and time from the input data.
+#' - date_time_changed: The date and time after attempting corrections.
+#' - expected_date_time: The expected date and time from the official record.
+#' - year_date_time: The year identifier.
+#' - match_status: A status message describing the match results.
+#' - result: A boolean indicating whether the final date and time matches the expected date and time.
 check_data_matches <- function(input_data, official_record) {
   check_matches <- function(row) {
     station_matches <- official_record[official_record$station == row$station, ]
@@ -74,22 +74,23 @@ check_data_matches <- function(input_data, official_record) {
 #' Align_dates
 #' This function is designed to align and verify date and time data between a given dataframe and an official record stored in a CSV file. 
 #' It infers the seasonal categorization of dates in the dataset, checks for mismatches between the dataset and the official record, and saves the results to an Excel file specified by the user.
-#' @param df A dataframe containing the columns `date_time` (with datetime values). The function will add two new columns to this dataframe: `year_date_time` (the year extracted from `date_time`) and `season_date_time` (the inferred season based on `date_time`).
+#' @param df A dataframe containing the columns date_time (with datetime values). The function will add two new columns to this dataframe: year_date_time (the year extracted from date_time) and season_date_time (the inferred season based on date_time).
 #' @return The function does not return a value. It performs the following steps:
-#'   1. Infers the season from the `date_time` column in both the input dataframe and the official record.
-#'   2. Checks for mismatches between the input dataframe and the official record using the `check_data_matches` function.
+#'   1. Infers the season from the date_time column in both the input dataframe and the official record.
+#'   2. Checks for mismatches between the input dataframe and the official record using the check_data_matches function.
 #'   3. Prompts the user to specify an output file path for saving the results.
 #'   4. Writes the results to an Excel file at the specified location.
 #' @details
-#' The function `infer_season_date_time` is an internal helper function used to categorize each datetime into a season:
+#' The function infer_season_date_time is an internal helper function used to categorize each datetime into a season:
 #' - "under ice" for dates in January through May
 #' - "break up" for dates in June
 #' - "open water" for dates in August and later, or if the date is after the 15th of July
 #' The official record is fetched from a remote CSV file, and seasonal and yearly categorizations are applied similarly.
-#' The function then uses the `check_data_matches` function (not provided in this script) to compare the input dataframe with the official record.
+#' The function then uses the check_data_matches function (not provided in this script) to compare the input dataframe with the official record.
 #' Finally, the user is prompted to provide an output file path, and the results are saved as an Excel file.
 Align_dates <- function(df) {
   
+  # Helper function to infer seasons from date_time
   infer_season_date_time <- function(date_time) {
     months <- month(date_time)
     days <- mday(date_time)
@@ -109,18 +110,45 @@ Align_dates <- function(df) {
     return(seasons)
   }
   
+  # Load official record
   official_record <- read.csv("https://utexas.box.com/shared/static/9hcctqqilisc0t61wbbdiziig8ok8rg8.csv")
   
+  # Add year and season columns
   df$year_date_time <- year(ymd_hms(df$date_time))
   df$season_date_time <- infer_season_date_time(df$date_time)
   official_record$season_date_time <- infer_season_date_time(ymd_hms(official_record$date_time))
   official_record$year_date_time <- year(ymd_hms(official_record$date_time))
   
+  # Use check_data_matches to compare input data with official record
   results_data <- check_data_matches(df, official_record)
   
-  # Prompt the user for the output file path
-  output_file_path <- readline(prompt = "Please enter the output file path (including file name): ")
+  # Update the date_time column in the input dataframe and display mismatch messages
+  for (i in seq_len(nrow(results_data))) {
+    row <- results_data[i, ]
+    
+    if (row$match_status == "No station match") {
+      message(paste("No Station match:", row$station))
+    } else if (row$match_status == "Station match but no year match") {
+      message(paste("Station match but no year match:", row$station, 
+                    "Original year:", df$year_date_time[i]))
+    } else if (row$match_status == "Year match but no season match") {
+      message(paste("Year match but no season match:", row$station, 
+                    "Original season:", df$season_date_time[i]))
+    }
+    
+    if (!is.na(row$expected_date_time) && row$original_date_time != row$date_time_changed) {
+      df$date_time[df$station == row$station & df$date_time == row$original_date_time] <- row$date_time_changed
+    }
+    
+    if (grepl("Multiple dates found in CP data", row$match_status)) {
+      message(paste("Multiple dates found for station", row$station, 
+                    "in CP data:", row$match_status))
+    }
+  }
   
-  write.xlsx(results_data, output_file_path, rowNames = FALSE)
-  print(paste("Results have been written to", output_file_path))
-}
+  # Remove columns
+  df <- df %>% select(-year_date_time, -season_date_time)
+  
+  # Return the updated dataframe
+  return(df)
+} 
