@@ -88,7 +88,7 @@ check_data_matches <- function(input_data, official_record) {
 #' The official record is fetched from a remote CSV file, and seasonal and yearly categorizations are applied similarly.
 #' The function then uses the check_data_matches function (not provided in this script) to compare the input dataframe with the official record.
 #' Finally, the user is prompted to provide an output file path, and the results are saved as an Excel file.
-Align_dates <- function(df) {
+align_dates <- function(df) {
   
   # Helper function to infer seasons from date_time
   infer_season_date_time <- function(date_time) {
