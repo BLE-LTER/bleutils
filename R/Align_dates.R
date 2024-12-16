@@ -122,27 +122,37 @@ Align_dates <- function(df) {
   # Use check_data_matches to compare input data with official record
   results_data <- check_data_matches(df, official_record)
   
+  # Track already-printed messages to avoid duplicates
+  printed_messages <- c()
+  
   # Update the date_time column in the input dataframe and display mismatch messages
   for (i in seq_len(nrow(results_data))) {
     row <- results_data[i, ]
     
+    # Generate the message
+    message_text <- NULL
     if (row$match_status == "No station match") {
-      message(paste("No Station match:", row$station))
+      message_text <- paste("No Station match:", row$station)
     } else if (row$match_status == "Station match but no year match") {
-      message(paste("Station match but no year match:", row$station, 
-                    "Original year:", df$year_date_time[i]))
+      message_text <- paste("Station match but no year match:", row$station, 
+                            "Original year:", df$year_date_time[i])
     } else if (row$match_status == "Year match but no season match") {
-      message(paste("Year match but no season match:", row$station, 
-                    "Original season:", df$season_date_time[i]))
+      message_text <- paste("Year match but no season match:", row$station, 
+                            "Original season:", df$season_date_time[i])
+    } else if (grepl("Multiple dates found in CP data", row$match_status)) {
+      message_text <- paste("Multiple dates found for station", row$station, 
+                            "in CP data:", row$match_status)
     }
     
+    # Print the message only if it hasn't been printed before
+    if (!is.null(message_text) && !(message_text %in% printed_messages)) {
+      message(message_text)
+      printed_messages <- c(printed_messages, message_text) # Add to the printed set
+    }
+    
+    # Update the date_time if needed
     if (!is.na(row$expected_date_time) && row$original_date_time != row$date_time_changed) {
       df$date_time[df$station == row$station & df$date_time == row$original_date_time] <- row$date_time_changed
-    }
-    
-    if (grepl("Multiple dates found in CP data", row$match_status)) {
-      message(paste("Multiple dates found for station", row$station, 
-                    "in CP data:", row$match_status))
     }
   }
   
@@ -151,4 +161,4 @@ Align_dates <- function(df) {
   
   # Return the updated dataframe
   return(df)
-} 
+}
