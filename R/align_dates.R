@@ -51,7 +51,6 @@ align_dates <- function(df) {
               } else {
                 result_list$match_status <- paste("Multiple dates found in CP data, none match:", toString(correct_dates))
                 result_list$expected_date_time <- NA
-                result_list$result <- FALSE
               }
             } else {
               result_list$expected_date_time <- correct_dates
