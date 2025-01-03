@@ -15,9 +15,9 @@
 #' 5. Updates the `date_time` column in the input dataframe if a mismatch is found and a valid correction is possible.
 #' 6. Returns the updated dataframe with corrected date-time values.
 #' 
-#' @import bleutils,
-#          lubridate,
-#'         dplyr
+#' @import httr 
+#' @import lubridate
+#' @import dplyr
 #'
 #' @examples
 #' # Assuming 'df' is a dataframe with a 'station' and 'date_time' column
