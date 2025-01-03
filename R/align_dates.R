@@ -15,9 +15,9 @@
 #' 5. Updates the `date_time` column in the input dataframe if a mismatch is found and a valid correction is possible.
 #' 6. Returns the updated dataframe with corrected date-time values.
 #' 
-#' @import bleutils
-#' @import lubridate
-#' @import dplyr
+#' @import bleutils,
+#          lubridate,
+#'         dplyr
 #'
 #' @examples
 #' # Assuming 'df' is a dataframe with a 'station' and 'date_time' column
@@ -25,7 +25,7 @@
 #'
 #' @export
 align_dates <- function(df) {
-  library(bleutils)
+  
 
   # Internal function to check data matches
   check_data_matches <- function(input_data, official_record) {
