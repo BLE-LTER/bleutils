@@ -16,7 +16,7 @@ Imports:
     RPostgres,
     DBI,
     EDIutils,
-    httr
+    httr,
     lubridate,
     jsonlite,
     dataone,
