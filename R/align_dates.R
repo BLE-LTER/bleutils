@@ -3,9 +3,9 @@
 #' This function compares date and time data from a user-provided dataframe (`df`) against an official record stored in a CSV file. It checks if the date-time for each station in the input dataframe matches the expected values from the official record, based on station, year, and season. The function attempts to correct mismatches where possible and reports any discrepancies. It updates the `date_time` column in the input dataframe where necessary and provides messages about the status of each match.
 #'
 #' @param df A dataframe containing station data with a `date_time` column. The dataframe must include a `station` column to match against the official record.
-#' 
+#'
 #' @return A dataframe with the same structure as the input dataframe (`df`), but with updated `date_time` values where mismatches are corrected. The columns `year_date_time` and `season_date_time` are removed from the output.
-#' 
+#'
 #' @details
 #' The function performs the following steps:
 #' 1. Loads an official record CSV containing expected station data.
@@ -14,8 +14,8 @@
 #' 4. For each row, it outputs a message describing the match status (e.g., no match, partial match, or full match).
 #' 5. Updates the `date_time` column in the input dataframe if a mismatch is found and a valid correction is possible.
 #' 6. Returns the updated dataframe with corrected date-time values.
-#' 
-#' @import httr 
+#'
+#' @import httr
 #' @import lubridate
 #' @import dplyr
 #'
@@ -25,7 +25,7 @@
 #'
 #' @export
 align_dates <- function(df) {
-  
+
 
   # Internal function to check data matches
   check_data_matches <- function(input_data, official_record) {
@@ -87,6 +87,8 @@ align_dates <- function(df) {
   }
 
   # Load official record
+  # This is from Box\Beaufort LTER\Core Program\Internal Data and Sample Sharing\Core Program Dat\CP_stations_and_dates.csv
+  # The CSV file is managed by the Core Program team, currently Kaylie Plumb (2025-01-09).
   official_record <- read.csv("https://utexas.box.com/shared/static/9hcctqqilisc0t61wbbdiziig8ok8rg8.csv")
 
   # Add year and season columns
@@ -110,13 +112,13 @@ align_dates <- function(df) {
     if (row$match_status == "No station match") {
       message_text <- paste("No Station match:", row$station)
     } else if (row$match_status == "Station match but no year match") {
-      message_text <- paste("Station match but no year match:", row$station, 
+      message_text <- paste("Station match but no year match:", row$station,
                             "Original year:", df$year_date_time[i])
     } else if (row$match_status == "Year match but no season match") {
-      message_text <- paste("Year match but no season match:", row$station, 
+      message_text <- paste("Year match but no season match:", row$station,
                             "Original season:", df$season_date_time[i])
     } else if (grepl("Multiple dates found in CP data", row$match_status)) {
-      message_text <- paste("Multiple dates found for station", row$station, 
+      message_text <- paste("Multiple dates found for station", row$station,
                             "in CP data:", row$match_status)
     }
 
