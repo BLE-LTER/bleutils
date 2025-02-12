@@ -22,14 +22,24 @@ jobs:
       - uses: r-lib/actions/setup-r@v2
         with:
           use-public-rspm: true
+      - name: Install pkgdown
+        run: Rscript -e 'install.packages("pkgdown")'
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           extra-packages: pkgdown
           needs: website
+      
+      - name: Debug info
+        run: |
+            Rscript -e 'sessionInfo()'
+            Rscript -e 'installed.packages()[,"Package"]'
+
+      - name: Build site
+        run: Rscript -e 'pkgdown::build_site()'
 
       - name: Deploy package
         run: |
-          git config --local user.name "$GITHUB_ACTOR"
-          git config --local user.email "$GITHUB_ACTOR@users.noreply.github.com"
-          Rscript -e 'pkgdown::deploy_to_branch(new_process = FALSE)'
+          git config --local user.name "${{ github.actor }}"
+          git config --local user.email "${{ github.actor }}@users.noreply.github.com"
+          Rscript -e 'pkgdown::deploy_to_branch(new_process = TRUE, branch = "gh-pages")'

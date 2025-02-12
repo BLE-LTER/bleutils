@@ -10,7 +10,7 @@ Description: This package contains utility functions for BLE LTER IM team.
 License: CC BY 4.0
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.2
 Depends: R (>= 2.10)
 Imports: 
     RPostgres,
