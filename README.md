@@ -33,10 +33,6 @@ df <- add_cp_cols(df, station_code_col = "station")
 
 Note that this function relies on a table of station information. This is [kept on Box at BLE-IM/BLE_LTER_CP_Stations.csv](https://utexas.app.box.com/file/1092468994724?s=sjt5phkdpyx9vsvpvcss461562vb5wsw) and a direct download link to it is fed under the argument "station_source" to the function. To generate a direct link to the Box file, go to its Shared Link Settings, and copy the URL under "Direct Link". You can also feed the function a local file path instead of a Box link.
 
-```r
-update_cp_stations(source_file = "path_goes_here")
-```
-
 #### Inferring sampling season based on dates
 
 `infer_season` outputs a vector of categorical season values (under ice/break up/open water) from a vector of date values (column in data.frame).
