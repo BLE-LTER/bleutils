@@ -4,7 +4,9 @@
 #' This function compares date and time data from a user-provided dataframe (`df`) against an official record stored in a CSV file. It checks if the date-time for each station in the input dataframe matches the expected values from the official record, based on station, year, and season. The function attempts to correct mismatches where possible and reports any discrepancies. It updates the `date_time` column in the input dataframe where necessary and provides messages about the status of each match.
 #'
 #' @param df A dataframe containing station data with a `date_time` column. The dataframe must include a `station` column to match against the official record.
-#' @param aligndates_source (character) URL to CSV file. I use a shared Box file for this. The source file is at https://utexas.box.com/shared/static/9hcctqqilisc0t61wbbdiziig8ok8rg8.csv 
+#' @param aligndates_source (character) URL to CSV file. The official record is kept on Box at 
+#' "All Files/Beaufort LTER/Core Program/Internal Data and Sample Sharing/Core Program data/CP_stations_and_dates.csv".
+#' The direct shared link to the file is: https://utexas.box.com/shared/static/9hcctqqilisc0t61wbbdiziig8ok8rg8.csv
 #' @return A dataframe with the same structure as the input dataframe (`df`), but with updated `date_time` values where mismatches are corrected. The columns `year_date_time` and `season_date_time` are removed from the output.
 #' 
 #' @details
