@@ -4,7 +4,7 @@
 #' This function compares date and time data from a user-provided dataframe (`df`) against an official record stored in a CSV file. It checks if the date-time for each station in the input dataframe matches the expected values from the official record, based on station, year, and season. The function attempts to correct mismatches where possible and reports any discrepancies. It updates the `date_time` column in the input dataframe where necessary and provides messages about the status of each match.
 #'
 #' @param df A dataframe containing station data with a `date_time` column. The dataframe must include a `station` column to match against the official record.
-#' 
+#' @param aligndates_source (character) URL to CSV file. I use a shared Box file for this. The source file is at https://utexas.box.com/shared/static/9hcctqqilisc0t61wbbdiziig8ok8rg8.csv 
 #' @return A dataframe with the same structure as the input dataframe (`df`), but with updated `date_time` values where mismatches are corrected. The columns `year_date_time` and `season_date_time` are removed from the output.
 #' 
 #' @details
@@ -99,43 +99,52 @@ align_dates <- function(df) {
   # Use check_data_matches to compare input data with official record
   results_data <- check_data_matches(df, official_record)
 
-  # Track already-printed messages to avoid duplicates
+  # Create an empty dataframe to store mismatch reports
+  mismatch_report <- data.frame(
+    Station = character(),
+    Datetime_in_Dataset = character(),
+    Comment = character(),
+    stringsAsFactors = FALSE
+  )
+
+  # Track already-logged messages to avoid duplicates
   printed_messages <- c()
 
-  # Update the date_time column in the input dataframe and display mismatch messages
   for (i in seq_len(nrow(results_data))) {
     row <- results_data[i, ]
 
-    # Generate the message
+    # Construct message based on match status
     message_text <- NULL
     if (row$match_status == "No station match") {
-      message_text <- paste("No Station match:", row$station)
+      message_text <- c(row$station, row$original_date_time, "Station not found in lookup")
     } else if (row$match_status == "Station match but no year match") {
-      message_text <- paste("Station match but no year match:", row$station, 
-                            "Original year:", df$year_date_time[i])
+      message_text <- c(row$station, row$original_date_time, paste("Station in lookup, but not for", row$year_date_time))
     } else if (row$match_status == "Year match but no season match") {
-      message_text <- paste("Year match but no season match:", row$station,"Year:", row$year_date_time, 
-                            "Original season:", df$season_date_time[i])
+      message_text <- c(row$station, row$original_date_time, paste("Station in lookup for this year, but not for season", df$season_date_time[i]))
     } else if (grepl("Multiple dates found in CP data", row$match_status)) {
-      message_text <- paste("Multiple dates found for station", row$station, 
-                            "in CP data:", row$match_status)
+      message_text <- c(row$station, row$original_date_time, "Multiple dates for this season found in lookup, but none match what's in the dataset")
     }
 
-    # Print the message only if it hasn't been printed before
-    if (!is.null(message_text) && !(message_text %in% printed_messages)) {
-      message(message_text)
-      printed_messages <- c(printed_messages, message_text) # Add to the printed set
+    # Add to the mismatch report if unique
+    if (!is.null(message_text) && !(paste(message_text, collapse = ",") %in% printed_messages)) {
+      mismatch_report <- rbind(mismatch_report, setNames(as.list(message_text), names(mismatch_report)))
+      printed_messages <- c(printed_messages, paste(message_text, collapse = ","))
     }
 
-    # Update the date_time if needed
+    # Update the date_time column in df if correction is possible
     if (!is.na(row$expected_date_time) && row$original_date_time != row$date_time_changed) {
       df$date_time[df$station == row$station & df$date_time == row$original_date_time] <- row$date_time_changed
     }
   }
 
-  # Remove columns
+  # Print the structured mismatch report if there are discrepancies
+  if (nrow(mismatch_report) > 0) {
+    message("These stations in the dataset do not match datetimes in the CP station-datetime lookup table:")
+    print(mismatch_report)
+  }
+
+  # Remove columns before returning the updated dataframe
   df <- df %>% dplyr::select(-year_date_time, -season_date_time)
 
-  # Return the updated dataframe
   return(df)
 }

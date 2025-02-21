@@ -147,3 +147,22 @@ input_dataframe <- ... # load your data table CSV into a data frame here
 file_path <- "c:\data\check_taxa_results.txt"
 check_classification(input_dataframe, file_path)
 ```
+#### Aligning Date and Time Data Based on Official Station Records
+
+During data collection, station date-time records must align with the official dataset to ensure consistency and accuracy. Sometimes, Researchers provide datasets with date-time values that do not exactly match the official station and date records due to various factors, including manual entry errors or discrepancies in recorded timestamps.
+
+For transparency and data consistency, we developed the align_dates function to check and correct date-time mismatches in Core Program (CP) data. This function compares user-provided date-time values with an official record of expected dates, correcting mismatches where possible and reporting any discrepancies.
+
+The function relies on a CSV file [kept on Box at All Files/Beaufort LTER/Core Program/Internal Data and Sample Sharing/Core Program data/CP_stations_and_dates.csv](https://utexas.box.com/s/9hcctqqilisc0t61wbbdiziig8ok8rg8), which contains the expected date-time values for each station.
+
+```r
+#'df' is a dataframe containing station and date_time columns
+results <- align_dates(df)
+
+# Extract the corrected dataframe
+df <- results$updated_df
+
+# Extract and review the mismatch report
+mismatch_report <- results$mismatch_report
+print(mismatch_report)
+```
