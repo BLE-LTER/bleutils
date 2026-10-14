@@ -1,22 +1,32 @@
 #' @title Compare ADC to EDI
 #' @description Reports datasets at EDI that the Arctic Data Center needs to harvest
+#' @param edi_auth_token (character) The EDI API authentication key
 #' @param adc_auth_token (character) The authentication token for the Arctic Data Center. See https://arcticdata.io/catalog/api
 #' @export
 
-
-compare_adc_to_edi <- function(adc_auth_token) {
+compare_adc_to_edi <- function(edi_auth_token, adc_auth_token) {
   library(dataone)
   library(EDIutils)
   library(dplyr)
-
+  
+  # Ask for API keys
+  edi_auth_token <- rstudioapi::askForPassword("Enter EDI API key")
+  adc_auth_token <- rstudioapi::askForPassword("Enter ADC API token")
+  
+  # Authenticate with EDI API
+  EDIutils::login(key = edi_auth_token)
+  
   # Query EDI
   edi_packages <- search_data_packages("fq=scope:knb-lter-ble&q=*&fl=doi,packageid")
   edi_packages$dataset <- as.numeric(sapply(strsplit(edi_packages$packageid, "\\."), function(x) x[2]))
   edi_packages$revision <- as.numeric(sapply(strsplit(edi_packages$packageid, "\\."), tail, 1))
   edi_packages$doi <- gsub("doi:", "https://doi.org/", edi_packages$doi)
-
+  
   # Query ADC
   options(options(dataone_token = adc_auth_token))  # Set authentication token
+  
+  httr::set_config(httr::user_agent("Mozilla/5.0"))
+  httr::set_config(httr::config(http_version = 2L))
   cn <- CNode("PROD")  # Connect to the production DataONE environment
   mn <- getMNode(cn, "urn:node:ARCTIC")  # Specify the Arctic Data Center member node
   query <- list(
@@ -35,7 +45,7 @@ compare_adc_to_edi <- function(adc_auth_token) {
   latest_revisions <- dataset_data %>%
     group_by(dataset_id) %>%
     slice_max(order_by = revision, n = 1) %>%
-    ungroup()  
+    ungroup()
   latest_revisions$packageid <- paste0("knb-lter-ble.", latest_revisions$dataset_id, ".", latest_revisions$revision)
   
   # Compare and identify missing or outdated package IDs
